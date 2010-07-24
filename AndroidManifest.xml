@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android" package="com.sadboy.wallpapers" android:versionCode="6" android:versionName="0.5">
+
+    <uses-sdk android:minSdkVersion="7" />
+    <uses-feature android:name="android.software.live_wallpaper" />
+
+    <application
+        android:label="@string/wallpapers"
+        android:icon="@drawable/icon">
+        
+         <activity android:name=".test.TouchRotateActivity"
+                  android:label="@string/wallpapers">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+          
+        </activity>
+        
+        
+        <service
+            android:label="@string/wallpaper_cube"
+            android:name=".CubeWallpaper"
+            android:thumbnail="@drawable/icon"
+            android:icon="@drawable/icon"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/cube" />
+        </service>
+        <service
+            android:label="@string/wallpaper_fire"
+            android:name=".FireWallpaperService"
+            android:thumbnail="@drawable/fire"
+            android:icon="@drawable/icon"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/fire" />
+        </service>
+        <service
+            android:label="@string/wallpaper_glow_worm"
+            android:name=".GlowWorm"
+            android:thumbnail="@drawable/glowworm"
+            android:icon="@drawable/glowworm"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/glowworm" />
+        </service>
+        
+        <service
+            android:label="@string/wallpaper_fingerPaint"
+            android:name=".FingerPaint"
+            android:thumbnail="@drawable/finger_paint"
+            android:icon="@drawable/finger_paint"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/paint" />
+        </service>
+        <service
+            android:label="@string/wallpaper_splatter"
+            android:name=".Splatter"
+            android:thumbnail="@drawable/paint"
+            android:icon="@drawable/paint"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/splatter" />
+        </service>
+        <activity
+            android:label="@string/settings"
+            android:name=".SplatterSettings"
+            android:theme="@android:style/Theme.Light.WallpaperSettings"
+            android:exported="true">
+        </activity>
+
+    </application>
+</manifest>
