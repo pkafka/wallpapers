@@ -8,7 +8,7 @@ public abstract class ODE
   private double q[];   //  array of dependent variables
   private double s;     //  independent variable
 
-  //  Constructor
+  //  Constructor 
   public ODE(int numEqns) {
     this.numEqns = numEqns;
     q = new double[numEqns];
