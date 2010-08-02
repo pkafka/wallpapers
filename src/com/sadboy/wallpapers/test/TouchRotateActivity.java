@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -75,7 +76,7 @@ class TouchSurfaceView extends GLSurfaceView {
         super(context);
         mRenderer = new CubeRenderer();
         setRenderer(mRenderer);
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 
     @Override public boolean onTrackballEvent(MotionEvent e) {
@@ -103,21 +104,33 @@ class TouchSurfaceView extends GLSurfaceView {
         return true;
     }
 
+
     /**
      * Render a cube.
      */
     private class CubeRenderer implements GLSurfaceView.Renderer {
         public CubeRenderer() {
             mCube = new Cube();
+            mLastDraw = System.currentTimeMillis();
+            mGaps = new long[100];
         }
 
+        long mLastDraw;
+        long[] mGaps;
+        int count = -1;
+        
         public void onDrawFrame(GL10 gl) {
-            /*
-             * Usually, the first thing one might want to do is to clear
-             * the screen. The most efficient way of doing this is to use
-             * glClear().
-             */
 
+        	count++;
+        	
+        	if (count < 100){
+	        	mGaps[count] = System.currentTimeMillis() - mLastDraw;
+	            mLastDraw = System.currentTimeMillis();;
+        	}
+        	else{
+        		String s = "br";
+        	}
+        	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
             /*
@@ -182,6 +195,9 @@ class TouchSurfaceView extends GLSurfaceView {
     private CubeRenderer mRenderer;
     private float mPreviousX;
     private float mPreviousY;
+    
+
 }
+
 
 

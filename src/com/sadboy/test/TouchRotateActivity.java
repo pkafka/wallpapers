@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.MotionEvent;
 
 /**
@@ -104,16 +105,30 @@ class TouchSurfaceView extends GLSurfaceView {
      * Render a cube.
      */
     private class CubeRenderer implements GLSurfaceView.Renderer {
+    	
+    	long mLastDraw;
+    	long[] mlist;
+    	int mCount;
+    	
+    	
         public CubeRenderer() {
             mCube = new Cube();
+            mLastDraw = new Time().toMillis(false);
+            mlist = new long[100];
+            mCount = 0;
         }
 
         public void onDrawFrame(GL10 gl) {
-            /*
-             * Usually, the first thing one might want to do is to clear
-             * the screen. The most efficient way of doing this is to use
-             * glClear().
-             */
+
+            mLastDraw = new Time().toMillis(false);
+            if (mCount < 99){
+    	        mlist[mCount] = mLastDraw;
+    	        mCount++;
+            }
+            else
+            {
+            	String s = "";
+            }
 
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 

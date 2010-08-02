@@ -68,8 +68,6 @@ public class Splatter extends WallpaperService
         int mHeight;
         int mWidth;
         
-        int mLastX;
-        int mLastY;
         Bitmap[] mDrawables;
 
         private final Paint mPaint = new Paint();
@@ -249,18 +247,64 @@ public class Splatter extends WallpaperService
             mPath.reset();
         }
         
+        int mLastX;
+        int mLastY;
+        int mTapCount;
+        long mTapTime;
+        
+        private void setLastTap(float x, float y){
+        	mLastX = (int)x;
+    		mLastY = (int)y;
+    		mTapCount++;
+    		mTapTime = System.currentTimeMillis();
+        }
+        
+        private boolean IsClearScreen(float x, float y){
+        	if (mTapCount == 0){
+        		setLastTap(x, y);
+        	}
+        	else if (mLastX < x + 30 && 
+        				mLastX > x - 30 &&
+        				mLastY < y + 30 &&
+        				mLastY > y - 30 &&
+        				System.currentTimeMillis() - mTapTime < 750){
+        			mTapCount = 0;
+        			//clear canvas
+        			if (mBlackAndWhite){
+            			mCanvas.drawColor(Color.BLACK);
+        			}
+        			else
+        				mCanvas.drawColor(Color.rgb(mRandom.nextInt(256), 
+                			mRandom.nextInt(256), 
+                			mRandom.nextInt(256)));
+        			
+            		mTapCount = 0;
+        			setLastTap(x, y);
+        			drawFrame();
+        			Toast.makeText(getApplicationContext(), "Double Tap Cleared", Toast.LENGTH_SHORT).show();
+        			return true;
+        	}
+        	else{
+        		mTapCount = 0;
+        		setLastTap(x, y);
+        	}
+        	return false;
+        }
+        
         @Override
         public void onTouchEvent(MotionEvent event) {
             float x = event.getX();
             float y = event.getY();
-            mLastX = (int)x - 50;
-            mLastY = (int)y - 50;
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                	if (IsClearScreen(x, y))
+                		return;
                     touch_start(x, y);
                     drawFrame();
                     break;
                 case MotionEvent.ACTION_MOVE:
+                	mLastX = (int)x - 50;
+            		mLastY = (int)y - 50;
                     touch_move(x, y);
                     drawFrame();
                     break;
@@ -281,7 +325,7 @@ public class Splatter extends WallpaperService
             
             if (mPaint == null)
             	return;
-
+            
             Canvas c = null;
             try {
                 c = holder.lockCanvas();

@@ -8,7 +8,7 @@
 
     <application
         android:label="@string/wallpapers"
-        android:icon="@drawable/icon">
+        android:icon="@drawable/icon" android:debuggable="true">
         
          <activity android:name=".test.TouchRotateActivity"
                   android:label="@string/wallpapers">

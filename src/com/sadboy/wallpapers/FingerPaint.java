@@ -45,7 +45,7 @@ public class FingerPaint extends WallpaperService {
         private Canvas  mCanvas;
         private Path    mPath;
         private Paint   mBitmapPaint;
-        private float mX, mY, mXOffset = 0, mYOffset = 0;
+        private float mX, mY;
 
         private final Paint mPaint = new Paint();
         
@@ -146,8 +146,8 @@ public class FingerPaint extends WallpaperService {
         private void touch_start(float x, float y) {
             mPath.reset();
             mPath.moveTo(x, y);
-            mX = x + mXOffset;
-            mY = y + mYOffset;
+            mX = x;
+            mY = y;
         }
         private void touch_move(float x, float y) {
             float dx = Math.abs(x - mX);
@@ -163,7 +163,46 @@ public class FingerPaint extends WallpaperService {
             // commit the path to our offscreen
             mCanvas.drawPath(mPath, mPaint);
             // kill this so we don't double draw
-            mPath.reset();
+           // mPath.reset();
+        }
+        
+        int mLastX;
+        int mLastY;
+        int mTapCount;
+        long mTapTime;
+        
+        private void setLastTap(float x, float y){
+        	mLastX = (int)x;
+    		mLastY = (int)y;
+    		mTapCount++;
+    		mTapTime = System.currentTimeMillis();
+        }
+        
+        private boolean IsClearScreen(float x, float y){
+        	if (mTapCount == 0){
+        		setLastTap(x, y);
+        	}
+        	else if (mLastX < x + 30 && 
+        				mLastX > x - 30 &&
+        				mLastY < y + 30 &&
+        				mLastY > y - 30 &&
+        				System.currentTimeMillis() - mTapTime < 750){
+
+        			mCanvas.drawColor(Color.rgb(mRandom.nextInt(256), 
+                			mRandom.nextInt(256), 
+                			mRandom.nextInt(256)));
+        			
+        			mTapCount = 0;
+        			setLastTap(x, y);
+        			drawFrame();
+        			Toast.makeText(getApplicationContext(), "Double Tap Cleared", Toast.LENGTH_SHORT).show();
+        			return true;
+        	}
+        	else{
+        		mTapCount = 0;
+        		setLastTap(x, y);
+        	}
+        	return false;
         }
         
         @Override
@@ -173,6 +212,8 @@ public class FingerPaint extends WallpaperService {
             
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                	if (IsClearScreen(x, y))
+                		return;
                     touch_start(x, y);
                     drawFrame();
                     break;
@@ -197,6 +238,9 @@ public class FingerPaint extends WallpaperService {
             	return;
             
             if (mPaint == null)
+            	return;
+            
+            if (mPath.isEmpty())
             	return;
 
             Canvas c = null;
