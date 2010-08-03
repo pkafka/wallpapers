@@ -161,9 +161,10 @@ public class FingerPaint extends WallpaperService {
         private void touch_up() {
             mPath.lineTo(mX, mY);
             // commit the path to our offscreen
-            mCanvas.drawPath(mPath, mPaint);
+            //mCanvas.drawPath(mPath, mPaint);
             // kill this so we don't double draw
-           // mPath.reset();
+            //mPath.reset();
+            pathReset();
         }
         
         int mLastX;
@@ -228,6 +229,12 @@ public class FingerPaint extends WallpaperService {
             }
         }
         
+        boolean reset;
+        void pathReset(){
+        	reset = true;
+        	mPath.reset();
+        }
+        
         void drawFrame() {
         	
         	if (!mVisible)
@@ -258,9 +265,15 @@ public class FingerPaint extends WallpaperService {
                     
                     mPaint.setStrokeWidth(mRandom.nextInt(50));
                     
-                    c.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                     
-                    c.drawPath(mPath, mPaint);
+                    //c.drawPath(mPath, mPaint);
+                    if (reset)
+                    	reset = false;
+                    else
+                    	mCanvas.drawPath(mPath, mPaint);
+
+
+                    c.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
                 }
             }
                 catch (Exception ex){

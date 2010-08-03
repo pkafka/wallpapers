@@ -88,7 +88,7 @@ class TouchSurfaceView extends GLSurfaceView {
 
     @Override public boolean onTouchEvent(MotionEvent e) {
     	float p = e.getPressure();
-    	Toast.makeText(getContext(), Float.toString(p), Toast.LENGTH_SHORT).show();
+    	//Toast.makeText(getContext(), Float.toString(p), Toast.LENGTH_SHORT).show();
         float x = e.getX();
         float y = e.getY();
         switch (e.getAction()) {
