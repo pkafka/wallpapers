@@ -16,8 +16,4 @@ public class FireWallpaperService extends GLWallpaperService {
 		};
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
 }

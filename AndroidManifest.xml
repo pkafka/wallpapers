@@ -10,6 +10,9 @@
         android:label="@string/wallpapers"
         android:icon="@drawable/icon" android:debuggable="true">
         
+        
+        
+
          <activity android:name=".test.TouchRotateActivity"
                   android:label="@string/wallpapers">
             <intent-filter>
@@ -18,8 +21,6 @@
             </intent-filter>
           
         </activity>
-        
-        
         <service
             android:label="@string/wallpaper_cube"
             android:name=".CubeWallpaper"
@@ -53,6 +54,8 @@
             </intent-filter>
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/glowworm" />
         </service>
+        
+        
         
         <service
             android:label="@string/wallpaper_fingerPaint"

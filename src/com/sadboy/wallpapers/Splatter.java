@@ -34,16 +34,6 @@ public class Splatter extends WallpaperService
 	public static final String SHARED_PREFS_BLACKANDWHITE="black_and_white";
 	
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public Engine onCreateEngine() {
         return new PaintEngine();
     }
