@@ -5,6 +5,10 @@ public class SimpleProjectile extends ODE
 {
   //  gravitational acceleration.
   public final static double G = -9.81;
+  public final static double MASS_SOLID = 100.0;
+  
+  double mMass = 10.0;
+  double mCOR = 0.9;
 
   public SimpleProjectile(double x0, double y0, double z0, 
                           double vx0, double vy0, double vz0,
@@ -23,6 +27,14 @@ public class SimpleProjectile extends ODE
     setQ(vz0,4);
     setQ(z0, 5);
   }
+  
+  public double getMass(){
+	  return mMass;
+  }
+  
+  public void setMass(double m){
+	  mMass = m;
+  }
 
   //  These methods return the location, velocity, 
   //  and time values
@@ -36,6 +48,26 @@ public class SimpleProjectile extends ODE
 
   public double getVz() {
     return getQ(4);
+  }
+  
+  public void stop() {
+	setQ(0, 0);    
+	setQ(0, 2);    
+	setQ(0, 4);    
+  }
+  
+  public void applyVelocity(double vx, double vy, double vz){
+	setQ(getQ(0) + vx, 0);    
+	setQ(getQ(2) + vy, 2);    
+	setQ(getQ(4) + vz, 4); 
+  }
+  
+  public void applyColission(){
+	  double tmp = 1.0/(mMass + MASS_SOLID);
+	  
+	  double newVx = (mMass - mCOR*MASS_SOLID)*getQ(0)*tmp +
+	  				(1.0 + mCOR)*MASS_SOLID*0*tmp;
+	  setQ(newVx, 0);
   }
 
   public double getX() {
@@ -71,7 +103,7 @@ public class SimpleProjectile extends ODE
     //  of velocity. The x- and y-velocities don't change.
     double x = x0 + vx0*dt;
     double y = y0 + vy0*dt;
-    double vz = vz0 + G*dt;
+    double vz = vz0 - G*dt;
     double z = z0 + vz0*dt + 0.5*G*dt*dt;
 
     //  Update time;
