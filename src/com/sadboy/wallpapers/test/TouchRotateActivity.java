@@ -135,9 +135,10 @@ class TouchSurfaceView extends GLSurfaceView {
         	
         	mProjectile.updateLocationAndVelocity(elapsed / 1000);
         	
-        	if (mProjectile.getZ() >= -2.0){
-        		mProjectile.stop();
-        		//mProjectile.applyColission();
+        	if (mProjectile.getZ() >= -3.0){
+        		mProjectile.applyColission();
+        		if (mProjectile.getVz() < -1.0)
+        			mProjectile.stop();
         	}
         	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);

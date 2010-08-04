@@ -256,7 +256,7 @@ public class FingerPaint extends WallpaperService {
                 c = holder.lockCanvas();
                 if (c != null && mBitmap != null) {
                 	
-                	c.drawColor(Color.rgb(mRandom.nextInt(256), 
+                	mCanvas.drawColor(Color.rgb(mRandom.nextInt(256), 
                 			mRandom.nextInt(256), 
                 			mRandom.nextInt(256)));
                 	

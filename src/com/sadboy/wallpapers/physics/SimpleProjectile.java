@@ -5,7 +5,7 @@ public class SimpleProjectile extends ODE
 {
   //  gravitational acceleration.
   public final static double G = -9.81;
-  public final static double MASS_SOLID = 100.0;
+  public final static double MASS_SOLID = 1000.0;
   
   double mMass = 10.0;
   double mCOR = 0.9;
@@ -65,9 +65,9 @@ public class SimpleProjectile extends ODE
   public void applyColission(){
 	  double tmp = 1.0/(mMass + MASS_SOLID);
 	  
-	  double newVx = (mMass - mCOR*MASS_SOLID)*getQ(0)*tmp +
-	  				(1.0 + mCOR)*MASS_SOLID*0*tmp;
-	  setQ(newVx, 0);
+	  double newVz = (mMass - mCOR*MASS_SOLID)*getQ(0)*tmp +
+	  				(1.0 + mCOR)*MASS_SOLID*1.0*tmp;
+	  setQ(newVz * -1, 4);
   }
 
   public double getX() {
