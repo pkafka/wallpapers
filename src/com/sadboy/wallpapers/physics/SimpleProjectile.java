@@ -37,6 +37,18 @@ public class SimpleProjectile extends ODE
   public double getVz() {
     return getQ(4);
   }
+  
+  public void stop() {
+	setQ(0, 0);    
+	setQ(0, 2);    
+	setQ(0, 4);    
+  }
+  
+  public void setVelocity(double vx, double vy, double vz){
+	setQ(vx, 0);    
+	setQ(vy, 2);    
+	setQ(vz, 4); 
+  }
 
   public double getX() {
     return getQ(1);
@@ -71,7 +83,7 @@ public class SimpleProjectile extends ODE
     //  of velocity. The x- and y-velocities don't change.
     double x = x0 + vx0*dt;
     double y = y0 + vy0*dt;
-    double vz = vz0 + G*dt;
+    double vz = vz0 - G*dt;
     double z = z0 + vz0*dt + 0.5*G*dt*dt;
 
     //  Update time;
