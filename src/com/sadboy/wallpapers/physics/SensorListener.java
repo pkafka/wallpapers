@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.GestureDetector;
 
 public class SensorListener implements SensorEventListener{
 
@@ -22,7 +23,6 @@ public class SensorListener implements SensorEventListener{
 	
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
 	}
 
 	@Override

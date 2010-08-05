@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
 import com.sadboy.wallpapers.physics.SensorListener;
@@ -45,10 +46,6 @@ public class TouchRotateActivity extends Activity {
     private GLSurfaceView mGLSurfaceView;
 }
 
-/**
- * Implement a simple rotation control.
- *
- */
 class TouchSurfaceView extends GLSurfaceView {
 
 
@@ -114,6 +111,8 @@ class TouchSurfaceView extends GLSurfaceView {
         	}
         }
         
+        float mX;
+        float mY;
         public void onDrawFrame(GL10 gl) {
 
         	double time = System.currentTimeMillis();
@@ -131,14 +130,30 @@ class TouchSurfaceView extends GLSurfaceView {
         		}
         	}
         	
-        	if (mSensor.getPitch() > 15){
-        		gl.glTranslatef(0, 0, 0);
-        	}
+    		float pitch = mSensor.getPitch();
+    		mY += (pitch * TOUCH_SCALE_FACTOR) * 0.003;
+    		mAngleY -= mY;
+    		
+    		if (mY > 1.5)
+    			mY = 1.5f;
+    		else if (mY < -1.5)
+    			mY = -1.5f;
+    		
+    		
+    		float roll = mSensor.getRoll();
+    		mX -= (roll * TOUCH_SCALE_FACTOR) * 0.003;
+    		mAngleX -= mX;
+    		
+    		if (mX > 1.5)
+    			mX = 1.5f;
+    		else if (mX < -1.5)
+    			mX = -1.5f;
+	    		
         	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glTranslatef(0, 0, (float)mProjectile.getZ());
+            gl.glTranslatef(mX, mY, (float)mProjectile.getZ());
             
             gl.glRotatef(mAngleX, 0, 1, 0);
             gl.glRotatef(mAngleY, 1, 0, 0);
@@ -169,7 +184,13 @@ class TouchSurfaceView extends GLSurfaceView {
         }
     }
 
-    
+    class Gest extends SimpleOnGestureListener{
+    	@Override
+    	public boolean onSingleTapUp(MotionEvent e) {
+    		// TODO Auto-generated method stub
+    		return super.onSingleTapUp(e);
+    	}
+    }
 
 }
 
