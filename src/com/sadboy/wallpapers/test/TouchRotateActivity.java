@@ -83,7 +83,6 @@ class TouchSurfaceView extends GLSurfaceView {
     @Override public boolean onTouchEvent(MotionEvent e) {
     	mRenderer.touch(e);
     	float p = e.getPressure();
-    	//Toast.makeText(getContext(), Float.toString(p), Toast.LENGTH_SHORT).show();
         float x = e.getX();
         float y = e.getY();
         switch (e.getAction()) {
@@ -123,7 +122,7 @@ class TouchSurfaceView extends GLSurfaceView {
         public void touch(MotionEvent e){
         	if (mProjectile.getZ() > -4.0 && 
         			e.getAction() == MotionEvent.ACTION_DOWN){
-        		mProjectile.applyVelocity(0.0, 0.0, -10.0);
+        		mProjectile.applyVelocity(0.0, 0.0, -15.0);
         	}
         }
         
@@ -135,10 +134,13 @@ class TouchSurfaceView extends GLSurfaceView {
         	
         	mProjectile.updateLocationAndVelocity(elapsed / 1000);
         	
-        	if (mProjectile.getZ() >= -3.0){
+        	if (mProjectile.getZ() >= -3.0 && 
+        			mProjectile.getVz() > 0.0){
         		mProjectile.applyColission();
-        		if (mProjectile.getVz() < -1.0)
-        			mProjectile.stop();
+        		if (mProjectile.getVz() > -1.0 && 
+        				mProjectile.getVz() < 1.0){
+        			mProjectile.stop();	
+        		}
         	}
         	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -153,7 +155,6 @@ class TouchSurfaceView extends GLSurfaceView {
             gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
             mCube.draw(gl);
-           
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -162,7 +163,7 @@ class TouchSurfaceView extends GLSurfaceView {
     	    float ratio = (float) width / height;
             gl.glMatrixMode(GL10.GL_PROJECTION);
             gl.glLoadIdentity();
-            gl.glFrustumf(-ratio, ratio, -1, 1, 1, 50);
+            gl.glFrustumf(-ratio, ratio, -1, 1, 1, 100);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
