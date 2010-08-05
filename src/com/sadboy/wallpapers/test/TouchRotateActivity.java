@@ -11,10 +11,10 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.sadboy.wallpapers.physics.SensorListener;
 import com.sadboy.wallpapers.physics.SimpleProjectile;
+import com.sadboy.wallpapers.shapes.Cube;
 
 
 public class TouchRotateActivity extends Activity {
