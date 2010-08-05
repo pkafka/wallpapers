@@ -77,6 +77,14 @@ public class SimpleProjectile extends ODE
   public double getY() {
     return getQ(3);
   }
+  
+  public void setX(double x) {
+    setQ(x, 1);
+  }
+
+  public void setY(double y) {
+    setQ(y, 3);
+  }
 
   public double getZ() {
     return getQ(5);

@@ -124,8 +124,6 @@ class TouchSurfaceView extends GLSurfaceView {
         	}
         }
         
-        float mX;
-        float mY;
         public void onDrawFrame(GL10 gl) {
 
         	double time = System.currentTimeMillis();
@@ -144,29 +142,36 @@ class TouchSurfaceView extends GLSurfaceView {
         	}
         	
     		float pitch = mSensor.getPitch();
-    		mY += (pitch * TOUCH_SCALE_FACTOR) * 0.003;
-    		mAngleY -= mY;
+    		double y = mProjectile.getY();
+    		y += (pitch * TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		if (mY > 1.5)
-    			mY = 1.5f;
-    		else if (mY < -1.5)
-    			mY = -1.5f;
+    		if (y > 1.5)
+    			y = 1.5f;
+    		else if (y < -1.5)
+    			y = -1.5f;
+    		else
+        		mAngleY -= y;
+    			
+    		mProjectile.setY(y);
     		
     		
     		float roll = mSensor.getRoll();
-    		mX -= (roll * TOUCH_SCALE_FACTOR) * 0.003;
-    		mAngleX -= mX;
+    		double x = mProjectile.getX();
+    		x -= (roll * TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		if (mX > 1.5)
-    			mX = 1.5f;
-    		else if (mX < -1.5)
-    			mX = -1.5f;
+    		if (x > 1.5)
+    			x = 1.5f;
+    		else if (x < -1.5)
+    			x = -1.5f;
+    		else
+        		mAngleX += x;
+    		
+    		mProjectile.setX(x);
 	    		
-        	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glTranslatef(mX, mY, (float)mProjectile.getZ());
+            gl.glTranslatef((float)mProjectile.getX(), (float)mProjectile.getY(), (float)mProjectile.getZ());
             
             gl.glRotatef(mAngleX, 0, 1, 0);
             gl.glRotatef(mAngleY, 1, 0, 0);
