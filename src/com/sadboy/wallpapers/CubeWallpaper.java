@@ -18,11 +18,10 @@ public class CubeWallpaper extends GLWallpaperService {
 
     @Override
     public Engine onCreateEngine() {
-    	CubeRenderer renderer = new CubeRenderer(getApplicationContext(), false);
+    	CubeRenderer renderer = new CubeRenderer(getApplicationContext());
     	GLEngine engine = new GLEngine();
     	engine.setRenderer(renderer);
-		engine.setRenderMode(GLEngine.RENDERMODE_WHEN_DIRTY);
-		renderer.setEngine(engine);
+		engine.setRenderMode(GLEngine.RENDERMODE_CONTINUOUSLY);
 		return engine;
     }
     
