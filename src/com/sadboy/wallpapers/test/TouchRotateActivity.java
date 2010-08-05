@@ -11,6 +11,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.sadboy.wallpapers.physics.SensorListener;
 import com.sadboy.wallpapers.physics.SimpleProjectile;
@@ -96,6 +97,8 @@ class TouchSurfaceView extends GLSurfaceView {
         double mLastDraw;
         SensorListener mSensor;
         
+        float mDownX, mDownY;
+        
         public CubeRenderer(Context c) {
             mCube = new Cube();
             mSensor = new SensorListener(c);
@@ -107,6 +110,16 @@ class TouchSurfaceView extends GLSurfaceView {
         public void touch(MotionEvent e){
         	if (mProjectile.getZ() > -3.5 && 
         			e.getAction() == MotionEvent.ACTION_DOWN){
+        		mDownX = e.getX();
+        		mDownY = e.getY();
+        	}
+        	else if (mProjectile.getZ() > -3.5 && 
+        			e.getAction() == MotionEvent.ACTION_UP &&
+        			e.getX() < mDownX + 30 &&
+        			e.getX() > mDownX - 30 &&
+        			e.getY() < mDownY + 30 &&
+        			e.getY() > mDownY - 30 &&
+        			e.getEventTime() - e.getDownTime() < 1000){
         		mProjectile.applyVelocity(0.0, 0.0, -15.0);
         	}
         }
