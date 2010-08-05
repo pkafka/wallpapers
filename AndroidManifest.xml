@@ -43,17 +43,6 @@
             </intent-filter>
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/fire" />
         </service>
-        <service
-            android:label="@string/wallpaper_glow_worm"
-            android:name=".GlowWorm"
-            android:thumbnail="@drawable/glowworm"
-            android:icon="@drawable/glowworm"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/glowworm" />
-        </service>
         
         
         

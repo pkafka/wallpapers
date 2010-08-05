@@ -60,7 +60,7 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
 	    			e.getY() < mDownY + 30 &&
 	    			e.getY() > mDownY - 30 &&
 	    			e.getEventTime() - e.getDownTime() < 1000){
-	        		mProjectile.applyVelocity(0.0, 0.0, -15.0);
+	        		mProjectile.applyVelocity(0.0, 0.0, -(e.getPressure() * 100));
 	        	}
 	    		break;
         }
@@ -139,7 +139,7 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
          gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,
                  GL10.GL_FASTEST);
 
-         gl.glClearColor(1,1,1,1);
+         gl.glClearColor(0,0,0,0);
          gl.glEnable(GL10.GL_CULL_FACE);
          gl.glShadeModel(GL10.GL_SMOOTH);
          gl.glEnable(GL10.GL_DEPTH_TEST);
