@@ -5,13 +5,14 @@ package com.sadboy.wallpapers.test;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.sadboy.wallpapers.physics.SimpleProjectile;
-
 import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
+
+import com.sadboy.wallpapers.physics.SensorListener;
+import com.sadboy.wallpapers.physics.SimpleProjectile;
 
 /**
  * Wrapper activity demonstrating the use of {@link GLSurfaceView}, a view
@@ -62,13 +63,10 @@ class TouchSurfaceView extends GLSurfaceView {
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private final float TRACKBALL_SCALE_FACTOR = 36.0f;
     private CubeRenderer mRenderer;
-    private float mPreviousX;
-    private float mPreviousY;
-    
     
     public TouchSurfaceView(Context context) {
         super(context);
-        mRenderer = new CubeRenderer();
+        mRenderer = new CubeRenderer(context);
         setRenderer(mRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
@@ -87,14 +85,13 @@ class TouchSurfaceView extends GLSurfaceView {
         float y = e.getY();
         switch (e.getAction()) {
         case MotionEvent.ACTION_MOVE:
-            float dx = x - mPreviousX;
-            float dy = y - mPreviousY;
+            float dx = x - mRenderer.mPreviousX;
+            float dy = y - mRenderer.mPreviousY;
             mRenderer.mAngleX += dx * TOUCH_SCALE_FACTOR;
             mRenderer.mAngleY += dy * TOUCH_SCALE_FACTOR;
-            requestRender();
         }
-        mPreviousX = x;
-        mPreviousY = y;
+        mRenderer.mPreviousX = x;
+        mRenderer.mPreviousY = y;
         return true;
     }
 
@@ -108,19 +105,23 @@ class TouchSurfaceView extends GLSurfaceView {
         private Cube mCube;
         public float mAngleX;
         public float mAngleY;
+        private float mPreviousX;
+        private float mPreviousY;
         
         SimpleProjectile mProjectile;
         double mLastDraw;
+        SensorListener mSensor;
         
-        public CubeRenderer() {
+        public CubeRenderer(Context c) {
             mCube = new Cube();
+            mSensor = new SensorListener(c);
             mLastDraw = System.currentTimeMillis();
             mProjectile = new SimpleProjectile(
         		   0.0, 0.0, -50.0, 0.0, 0.0, 0.0, mLastDraw);
         }
         
         public void touch(MotionEvent e){
-        	if (mProjectile.getZ() > -4.0 && 
+        	if (mProjectile.getZ() > -3.5 && 
         			e.getAction() == MotionEvent.ACTION_DOWN){
         		mProjectile.applyVelocity(0.0, 0.0, -15.0);
         	}
