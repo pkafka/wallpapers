@@ -14,20 +14,12 @@ import android.view.MotionEvent;
 import com.sadboy.wallpapers.physics.SensorListener;
 import com.sadboy.wallpapers.physics.SimpleProjectile;
 
-/**
- * Wrapper activity demonstrating the use of {@link GLSurfaceView}, a view
- * that uses OpenGL drawing into a dedicated surface.
- *
- * Shows:
- * + How to redraw in response to user input.
- */
+
 public class TouchRotateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Create our Preview view and set it as the content of our
-        // Activity
         mGLSurfaceView = new TouchSurfaceView(this);
         setContentView(mGLSurfaceView);
         mGLSurfaceView.requestFocus();
@@ -95,13 +87,8 @@ class TouchSurfaceView extends GLSurfaceView {
         return true;
     }
 
-
-    /**
-     * Render a cube.
-     */
     private class CubeRenderer implements GLSurfaceView.Renderer {
     	
-
         private Cube mCube;
         public float mAngleX;
         public float mAngleY;
@@ -144,11 +131,15 @@ class TouchSurfaceView extends GLSurfaceView {
         		}
         	}
         	
+        	if (mSensor.getPitch() > 15){
+        		gl.glTranslatef(0, 0, 0);
+        	}
+        	
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(0, 0, (float)mProjectile.getZ());
+            
             gl.glRotatef(mAngleX, 0, 1, 0);
             gl.glRotatef(mAngleY, 1, 0, 0);
 
