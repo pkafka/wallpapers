@@ -129,6 +129,9 @@ class TouchSurfaceView extends GLSurfaceView {
         	double time = System.currentTimeMillis();
         	double elapsed = time - mLastDraw;
         	mLastDraw = time;
+        
+        	if (elapsed > 1000)
+        		elapsed = 60;
         	
         	mProjectile.updateLocationAndVelocity(elapsed / 1000);
         	

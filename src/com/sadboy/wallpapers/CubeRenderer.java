@@ -33,7 +33,7 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
         mSensor = new SensorListener(c);
         mLastDraw = System.currentTimeMillis();
         mProjectile = new SimpleProjectile(
-    		   0.0, 0.0, -50.0, 0.0, 0.0, 0.0, mLastDraw);
+    		   0.0, 0.0, -10.0, 0.0, 0.0, 0.0, mLastDraw);
     }
 
 	@Override
@@ -73,6 +73,9 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
     	double time = System.currentTimeMillis();
     	double elapsed = time - mLastDraw;
     	mLastDraw = time;
+    	
+    	if (elapsed > 1000)
+    		elapsed = 60;
     	
     	mProjectile.updateLocationAndVelocity(elapsed / 1000);
     	
