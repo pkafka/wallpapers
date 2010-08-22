@@ -118,7 +118,9 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef((float)mProjectile.getX(), (float)mProjectile.getY(), (float)mProjectile.getZ());
+        gl.glTranslatef((float)mProjectile.getX(), 
+        		(float)mProjectile.getY(), 
+        		+(float)mProjectile.getZ());
         
         gl.glRotatef(mAngleX, 0, 1, 0);
         gl.glRotatef(mAngleY, 1, 0, 0);
