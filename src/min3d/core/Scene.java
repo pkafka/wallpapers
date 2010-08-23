@@ -58,7 +58,7 @@ public class Scene implements IObject3dContainer, IDirtyParent
 	 */
 	public void reset()
 	{
-		clearChildren(this);
+		//clearChildren(this);
 
 		_children = new ArrayList<Object3d>();
 
