@@ -21,6 +21,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class Renderer implements GLSurfaceView.Renderer
@@ -92,7 +93,7 @@ public class Renderer implements GLSurfaceView.Renderer
 	public void onDrawFrame(GL10 gl)
 	{
 		// Update 'model'
-		_scene.update();
+		//_scene.update();
 		
 		// Update 'view'
 		drawSetup();

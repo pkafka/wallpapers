@@ -29,6 +29,11 @@ public class Scene implements IObject3dContainer, IDirtyParent
 		_sceneController = $sceneController;
 		_lights = new ManagedLightList();
 	}
+	
+	public Scene() 
+	{
+		_lights = new ManagedLightList();
+	}
 
 	/**
 	 * Allows you to use any Class implementing ISceneController
@@ -196,8 +201,8 @@ public class Scene implements IObject3dContainer, IDirtyParent
 		
 		this.reset();
 		
-		_sceneController.initScene();
-		_sceneController.getInitSceneHandler().post(_sceneController.getInitSceneRunnable());
+		//_sceneController.initScene();
+		//_sceneController.getInitSceneHandler().post(_sceneController.getInitSceneRunnable());
 	}
 	
 	void update()
