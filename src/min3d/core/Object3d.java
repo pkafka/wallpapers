@@ -20,6 +20,8 @@ public class Object3d
 	//  gravitational acceleration.
 	public final static double G = -9.81;
 	public final static double MASS_SOLID = 1000000;
+	
+    public final static float TOUCH_SCALE_FACTOR = 180.0f / 320;
 	  
 	double _mass = 10.0;
 	double _COR = 0.5;
@@ -104,6 +106,17 @@ public class Object3d
 
     	//  Update time;
     	_time = _time + dt;
+    }
+    
+    public void applyColission(){
+  	  double tmp = 1.0/(_mass + MASS_SOLID);
+  	  
+  	  _velocity.z = (float) ((_mass - _COR*MASS_SOLID)*_velocity.z*tmp +
+  	  				(1.0 + _COR)*MASS_SOLID*0.0*tmp);
+    }
+    
+    public void stop(){
+    	_velocity.setAll(0, 0, 0);
     }
 	
 	/**
