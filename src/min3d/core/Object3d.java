@@ -13,9 +13,18 @@ import min3d.vos.ShadeModel;
 /**
  * @author Lee
  */
-public class Object3d
+public class Object3d 
 {
 	private String _name;
+	
+	//  gravitational acceleration.
+	public final static double G = -9.81;
+	public final static double MASS_SOLID = 1000000;
+	  
+	double _mass = 10.0;
+	double _COR = 0.5;
+	
+	double _time;
 	
 	private RenderType _renderType = RenderType.TRIANGLES;
 	private int _renderTypeInt = GL10.GL_TRIANGLES;
@@ -30,6 +39,7 @@ public class Object3d
 
 	private Number3d _position = new Number3d(0,0,0);
 	private Number3d _rotation = new Number3d(0,0,0);
+	private Number3d _velocity = new Number3d(0,0,0);
 	private Number3d _scale = new Number3d(1,1,1);
 
 	private Color4 _defaultColor = new Color4();
@@ -51,6 +61,7 @@ public class Object3d
 	
 	private Scene _scene;
 	private IObject3dContainer _parent;
+	
 
 	/**
 	 * Maximum number of vertices and faces must be specified at instantiation.
@@ -81,6 +92,19 @@ public class Object3d
 		_faces = $faces;
 		_textures = $textures;
 	}
+	
+    //  This method updates the velocity and position
+    //  of the object according to the gravity-only model.
+    public void updateLocationAndVelocity(double dt) {
+    	//  Update the xyz locations and the z-component of velocity. 
+    	_position.x = (float) (_position.x + _velocity.x*dt);
+    	_position.y = (float) (_position.y + _velocity.y*dt);
+    	_velocity.z = (float) (_velocity.z - G*dt);
+    	_position.z = (float) (_position.z + _velocity.z*dt + 0.5*G*dt*dt);
+
+    	//  Update time;
+    	_time = _time + dt;
+    }
 	
 	/**
 	 * Holds references to vertex position list, vertex u/v mappings list, vertex normals list, and vertex colors list
@@ -335,6 +359,11 @@ public class Object3d
 	public Number3d rotation()
 	{
 		return _rotation;
+	}
+	
+	public Number3d velocity()
+	{
+		return _velocity;
 	}
 
 	/**

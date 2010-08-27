@@ -56,7 +56,10 @@ public class Min3dWallpaper extends GLWallpaperService {
     	min3d.core.Renderer _renderer;
     	public Scene _scene;
     	
-    	private Object3dContainer objModel;
+        double _lastDraw;
+        SensorListener _sensor;
+
+    	Object3dContainer _cube;
     	
         public Min3dRenderer(Context c) {
 
@@ -64,6 +67,9 @@ public class Min3dWallpaper extends GLWallpaperService {
     		
     		_scene = new Scene();
     		_renderer = new min3d.core.Renderer(_scene);
+    		
+            _sensor = new SensorListener(c);
+            _lastDraw = System.currentTimeMillis();
         }
 
     	@Override
@@ -73,8 +79,16 @@ public class Min3dWallpaper extends GLWallpaperService {
         
         public void onDrawFrame(GL10 gl) {
 
-    		objModel.rotation().x++;
-    		objModel.rotation().z++;
+        	double time = System.currentTimeMillis();
+        	double elapsed = time - _lastDraw;
+        	_lastDraw = time;
+        	
+        	if (elapsed > 1000)
+        		elapsed = 60;
+        	
+        	elapsed = elapsed / 1000;
+        	
+        	_cube.updateLocationAndVelocity(elapsed);
     		
         	_renderer.onDrawFrame(gl);
         }
@@ -91,15 +105,11 @@ public class Min3dWallpaper extends GLWallpaperService {
         
         public void initScene() 
     	{
-    		_scene.lights().add(new Light());
-    		
-    		IParser parser = Parser.createParser(Parser.Type.OBJ,
-    				getResources(), "com.sadboy.wallpapers:raw/die_obj", false);
-    		parser.parse();
-
-    		objModel = parser.getParsedObject();
-    		objModel.scale().x = objModel.scale().y = objModel.scale().z = .7f;
-    		_scene.addChild(objModel);
+        	_scene.lights().add( new Light() );
+    		_cube = new Box(1,1,1, null, true,true,false);
+    		_cube.colorMaterialEnabled(false);
+    		_cube.position().z = -25;
+    		_scene.addChild(_cube);
     	}
         
     

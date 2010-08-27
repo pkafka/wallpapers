@@ -77,6 +77,8 @@ public class CubeRenderer implements GLWallpaperService.Renderer {
     	if (elapsed > 1000)
     		elapsed = 60;
     	
+    	elapsed = elapsed / 1000;
+    	
     	mProjectile.updateLocationAndVelocity(elapsed / 1000);
     	
     	if (mProjectile.getZ() >= -3.0 && 
