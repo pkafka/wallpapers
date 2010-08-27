@@ -43,6 +43,17 @@
             </intent-filter>
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/cube_min3d" />
         </service>
+         <service
+            android:label="@string/wallpaper_disco"
+            android:name=".DiscoWallpaper"
+            android:thumbnail="@drawable/icon"
+            android:icon="@drawable/icon"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/disco" />
+        </service>
         <service
             android:label="@string/wallpaper_fire"
             android:name=".FireWallpaperService"
