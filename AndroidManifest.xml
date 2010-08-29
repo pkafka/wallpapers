@@ -33,7 +33,7 @@
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/cube" />
         </service>
                 <service
-            android:label="@string/wallpaper_cube_min3d"
+            android:label="@string/wallpaper_min3d"
             android:name=".Min3dWallpaper"
             android:thumbnail="@drawable/icon"
             android:icon="@drawable/icon"
@@ -41,7 +41,7 @@
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/cube_min3d" />
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/min3d" />
         </service>
          <service
             android:label="@string/wallpaper_disco"

@@ -119,7 +119,7 @@ public class Min3dWallpaper extends GLWallpaperService {
     		float roll = _sensor.getRoll();
     		_obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		checkWallCollisions(_obj);
+    		checkWallCollisions();
     		
         	_renderer.onDrawFrame(gl);
         }
@@ -161,25 +161,25 @@ public class Min3dWallpaper extends GLWallpaperService {
         	}
         }
         
-        void checkWallCollisions(Sphere obj){
-        	if (testBallWallCollision(obj, Wall.WALL_LEFT) ||
-        			testBallWallCollision(obj, Wall.WALL_RIGHT) ||
-        			testBallWallCollision(obj, Wall.WALL_NEAR) ||
-        			testBallWallCollision(obj, Wall.WALL_FAR) ||
-        			testBallWallCollision(obj, Wall.WALL_TOP) ||
-        			testBallWallCollision(obj, Wall.WALL_BOTTOM)){
-        		
-        		Toast.makeText(Shared.context(), "Collision Occured!", Toast.LENGTH_SHORT).show();
-        		
+        void checkWallCollisions(){
+        	checkWallCollision(_obj, Wall.WALL_BOTTOM);
+        	checkWallCollision(_obj, Wall.WALL_FAR);
+        	checkWallCollision(_obj, Wall.WALL_LEFT);
+        	checkWallCollision(_obj, Wall.WALL_NEAR);
+        	checkWallCollision(_obj, Wall.WALL_RIGHT);
+        	checkWallCollision(_obj, Wall.WALL_TOP);
+        }
+        void checkWallCollision(Sphere obj, Wall wall){
+        	if (testBallWallCollision(obj, wall)){
+
         		//Make the ball reflect off of the wall
-	        	Number3d dir = wallDirection(Wall.WALL_LEFT);
+	        	Number3d dir = wallDirection(wall);
 	            dir.normalize();
 	            
 	            float objDot = Number3d.dot(obj.velocity(), dir);
 	            dir.multiply(objDot);
 	            dir.multiply(2f);
 	            obj.velocity().subtract(dir);
-	            
         	}
         }
         
