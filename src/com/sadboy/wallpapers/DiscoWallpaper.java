@@ -6,11 +6,14 @@ import javax.microedition.khronos.opengles.GL10;
 import min3d.Shared;
 import min3d.core.Object3dContainer;
 import min3d.core.Scene;
+import min3d.objectPrimitives.Box;
 import min3d.objectPrimitives.Sphere;
 import min3d.vos.Light;
 import min3d.vos.LightType;
+import min3d.vos.Number3d;
 import android.content.Context;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.sadboy.wallpapers.physics.SensorListener;
 
@@ -53,6 +56,7 @@ public class DiscoWallpaper extends GLWallpaperService {
     	Light _lightBlue;
 
     	Object3dContainer _sphere;
+    	
 
     	int _count = 0;
     	
@@ -79,7 +83,7 @@ public class DiscoWallpaper extends GLWallpaperService {
     		float z = (float)(Math.cos(_count%360 * DEGREE) * 2.25f);
     		_lightGreen.position.setAll(x, 0, z);
     		_lightBlue.position.setAll(0, -0.9f, 2.5f);
-    		
+
     		// Red light pulses by changing diffuse red property
     		
     		short mag = (short)(255 - (_count % 60) * (255/60));
@@ -93,10 +97,12 @@ public class DiscoWallpaper extends GLWallpaperService {
     		else if (_count % 30 == 20) {
     			_lightGreen.isVisible(false);
     		}
-
+    		
     		_count++;
     		if (_count > 360)
     			_count = 0;
+
+    		_sphere.rotation().y = _count;
     		
         	_renderer.onDrawFrame(gl);
         }
@@ -112,7 +118,9 @@ public class DiscoWallpaper extends GLWallpaperService {
         
         public void initScene() 
     	{
-        	_lightRed = new Light();
+        	_scene.camera().position.setAll(0,0,5);
+
+    		_lightRed = new Light();
     		_lightRed.ambient.setAll(0x88110000);
     		_lightRed.diffuse.setAll(0xffff0000);
     		_lightRed.type(LightType.POSITIONAL); // looks nicer, especially with multiple lights interacting with each other
@@ -129,13 +137,14 @@ public class DiscoWallpaper extends GLWallpaperService {
     		_lightBlue.diffuse.setAll(0xff0000ff);
     		_lightBlue.type(LightType.POSITIONAL); 
     		_scene.lights().add(_lightBlue);
-    		
+
     		_sphere = new Sphere(1.0f, 20, 15);
     		_sphere.vertexColorsEnabled(false);
     		_scene.addChild(_sphere);
-    		
+
     		_count = 0;
     	}
         
+
     }
 }

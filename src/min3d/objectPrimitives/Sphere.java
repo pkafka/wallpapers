@@ -38,6 +38,10 @@ public class Sphere extends Object3dContainer
 		this($radius,$columns,$rows,true,true,true);
 	} 
 	
+
+	public float radius(){
+		return _radius;
+	}
 	
 	private void build()
 	{

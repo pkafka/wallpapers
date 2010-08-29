@@ -71,6 +71,13 @@ public class Number3d
 		this.z -= n.z;
 	}
 	
+	public void subtract(float n)
+	{
+		this.x -= n;
+		this.y -= n;
+		this.z -= n;
+	}
+	
 	public void multiply(Float f)
 	{
 		this.x *= f;
@@ -154,6 +161,7 @@ public class Number3d
 	{
 		return ( v.x * w.x + v.y * w.y + w.z * v.z );
 	}
+	
 	
 	// * 	Math functions thanks to Papervision3D AS3 library
 	// 		http://code.google.com/p/papervision3d/

@@ -6,26 +6,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
 import min3d.core.Object3d;
-import min3d.core.Object3dContainer;
-import min3d.core.Renderer;
 import min3d.core.Scene;
-import min3d.interfaces.ISceneController;
-import min3d.objectPrimitives.Box;
 import min3d.objectPrimitives.Sphere;
-import min3d.parser.IParser;
-import min3d.parser.Parser;
 import min3d.vos.Light;
-import min3d.vos.LightType;
-
+import min3d.vos.Number3d;
 import android.content.Context;
-import android.opengl.GLSurfaceView;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.sadboy.wallpapers.physics.SensorListener;
-import com.sadboy.wallpapers.physics.SimpleProjectile;
-import com.sadboy.wallpapers.shapes.Cube;
 
 
 public class Min3dWallpaper extends GLWallpaperService {
@@ -60,7 +49,9 @@ public class Min3dWallpaper extends GLWallpaperService {
         double _lastDraw;
         SensorListener _sensor;
 
-    	Object3dContainer _obj;
+    	Sphere _obj;
+    	
+    	final float BOX_SIZE = 12.0f;
     	
     	//touch rotate vars
         float _downX, _downY, _previousX, _previousY;
@@ -120,36 +111,15 @@ public class Min3dWallpaper extends GLWallpaperService {
         	elapsed = elapsed / 1000;
         	
         	_obj.updateLocationAndVelocity(elapsed);
-        	
-        	if (_obj.position().z >= -3.0 && 
-        			_obj.velocity().z > 0.0){
-        		_obj.applyColission();
-        		if (_obj.velocity().z > -1.0 && 
-        				_obj.velocity().z < 1.0){
-        			_obj.stop();	
-        		}
-        	}
-        	
+        
         	float pitch = _sensor.getPitch();
         	_obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		if (_obj.position().y > 1.5)
-    			_obj.position().y = 1.5f;
-    		else if (_obj.position().y < -1.5)
-    			_obj.position().y = -1.5f;
-    		else
-        		_obj.rotation().y -= _obj.position().y;
-    			
+
     		float roll = _sensor.getRoll();
     		_obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		if (_obj.position().x > 1.5)
-    			_obj.position().x = 1.5f;
-    		else if (_obj.position().x < -1.5)
-    			_obj.position().x = -1.5f;
-    		else
-    			_obj.rotation().x -= _obj.position().x;
-    		
+    		checkWallCollisions(_obj);
     		
         	_renderer.onDrawFrame(gl);
         }
@@ -172,7 +142,58 @@ public class Min3dWallpaper extends GLWallpaperService {
     		_scene.addChild(_obj);
     	}
         
-    
+        Number3d wallDirection(Wall wall) {
+        	switch (wall) {
+        		case WALL_LEFT:
+        			return new Number3d(-1, 0, 0);
+        		case WALL_RIGHT:
+        			return new Number3d(1, 0, 0);
+        		case WALL_FAR:
+        			return new Number3d(0, 0, -1);
+        		case WALL_NEAR:
+        			return new Number3d(0, 0, 1);
+        		case WALL_TOP:
+        			return new Number3d(0, 1, 0);
+        		case WALL_BOTTOM:
+        			return new Number3d(0, -1, 0);
+        		default:
+        			return new Number3d(0, 0, 0);
+        	}
+        }
+        
+        void checkWallCollisions(Sphere obj){
+        	if (testBallWallCollision(obj, Wall.WALL_LEFT) ||
+        			testBallWallCollision(obj, Wall.WALL_RIGHT) ||
+        			testBallWallCollision(obj, Wall.WALL_NEAR) ||
+        			testBallWallCollision(obj, Wall.WALL_FAR) ||
+        			testBallWallCollision(obj, Wall.WALL_TOP) ||
+        			testBallWallCollision(obj, Wall.WALL_BOTTOM)){
+        		
+        		Toast.makeText(Shared.context(), "Collision Occured!", Toast.LENGTH_SHORT).show();
+        		
+        		//Make the ball reflect off of the wall
+	        	Number3d dir = wallDirection(Wall.WALL_LEFT);
+	            dir.normalize();
+	            
+	            float objDot = Number3d.dot(obj.velocity(), dir);
+	            dir.multiply(objDot);
+	            dir.multiply(2f);
+	            obj.velocity().subtract(dir);
+	            
+        	}
+        }
+        
+        boolean testBallWallCollision(Sphere obj, Wall wall){
+        	Number3d dir = wallDirection(wall);
+        	//Check whether the ball is far enough in the "dir" direction, and whether
+        	//it is moving toward the wall
+        	return Number3d.dot(obj.position(), dir) + 
+        			obj.radius() > BOX_SIZE / 2 && Number3d.dot(obj.velocity(), dir) > 0;
+        }
     }
-
+    
+    public enum Wall {
+    	WALL_LEFT, WALL_RIGHT, WALL_FAR, WALL_NEAR, 
+    	WALL_TOP, WALL_BOTTOM
+    }
 }
