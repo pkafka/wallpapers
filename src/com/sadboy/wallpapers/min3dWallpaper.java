@@ -49,9 +49,12 @@ public class Min3dWallpaper extends GLWallpaperService {
         double _lastDraw;
         SensorListener _sensor;
 
-    	Sphere _obj;
+    	Sphere _obj1;
+    	Sphere _obj2;
+    	Sphere _obj3;
+    	Sphere _obj4;
     	
-    	final float BOX_SIZE = 12.0f;
+    	final float BOX_SIZE = 6.0f;
     	
     	//touch rotate vars
         float _downX, _downY, _previousX, _previousY;
@@ -75,23 +78,23 @@ public class Min3dWallpaper extends GLWallpaperService {
     	        case MotionEvent.ACTION_MOVE:
     	            float dx = x - _previousX;
     	            float dy = y - _previousY;
-    	            _obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
-    	            _obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
+    	            _obj1.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
+    	            _obj1.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
     	        break;
     	        case MotionEvent.ACTION_DOWN:
-    	    	if (_obj.position().z > -3.5){
+    	    	if (_obj1.position().z > -3.5){
     	    		_downX = e.getX();
     	    		_downY = e.getY();
     	    	}
     	    	break;
     	        case MotionEvent.ACTION_UP:    	
-    	        	if (_obj.position().z > -3.5 && 
+    	        	if (_obj1.position().z > -3.5 && 
     	    			e.getX() < _downX + 30 &&
     	    			e.getX() > _downX - 30 &&
     	    			e.getY() < _downY + 30 &&
     	    			e.getY() > _downY - 30 &&
     	    			e.getEventTime() - e.getDownTime() < 1000){
-    	        		_obj.velocity().z = -(e.getPressure() * 100);
+    	        		_obj1.velocity().z = -(e.getPressure() * 100);
     	        	}
     	    		break;
             }
@@ -110,18 +113,28 @@ public class Min3dWallpaper extends GLWallpaperService {
         	
         	elapsed = elapsed / 1000;
         	
-        	_obj.updateLocationAndVelocity(elapsed);
+        	updateObject(_obj1, elapsed);
+        	updateObject(_obj2, elapsed);
+        	updateObject(_obj3, elapsed);
+        	updateObject(_obj4, elapsed);
+        	
+        	_renderer.onDrawFrame(gl);
+        }
         
+        public void updateObject(Object3d obj, double elapsed){
+        	
+        	obj.updateLocationAndVelocity(elapsed);
+            
         	float pitch = _sensor.getPitch();
-        	_obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+        	obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
 
     		float roll = _sensor.getRoll();
-    		_obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    		obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-    		checkWallCollisions();
-    		
-        	_renderer.onDrawFrame(gl);
+        	checkWallCollisions(obj);
+        	
+        	handleBallBallCollisions();
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -136,10 +149,29 @@ public class Min3dWallpaper extends GLWallpaperService {
         public void initScene() 
     	{
         	_scene.lights().add( new Light() );
-        	_obj = new Sphere(1.0f, 20, 15, false, false, true); 
-    		_obj.colorMaterialEnabled(false);
-    		_obj.position().z = -15;
-    		_scene.addChild(_obj);
+        	
+        	_obj1 = new Sphere(.3f, 20, 15, false, false, true); 
+    		_obj1.colorMaterialEnabled(false);
+    		_obj1.position().z = -15;
+    		_obj1.position().x = 2;
+    		_scene.addChild(_obj1);
+    		
+    		_obj2 = new Sphere(.3f, 20, 15, false, false, true); 
+    		_obj2.colorMaterialEnabled(false);
+    		_obj2.position().z = -5;
+    		_scene.addChild(_obj2);
+    		
+    		_obj3 = new Sphere(.3f, 20, 15, false, false, true); 
+    		_obj3.colorMaterialEnabled(false);
+    		_obj3.position().z = -12;
+    		_obj1.position().x = 5;
+    		_scene.addChild(_obj3);
+    		
+    		_obj4 = new Sphere(.3f, 20, 15, false, false, true); 
+    		_obj4.colorMaterialEnabled(false);
+    		_obj4.position().z = -5;
+    		_obj1.position().x = 1;
+    		_scene.addChild(_obj4);
     	}
         
         Number3d wallDirection(Wall wall) {
@@ -161,15 +193,15 @@ public class Min3dWallpaper extends GLWallpaperService {
         	}
         }
         
-        void checkWallCollisions(){
-        	checkWallCollision(_obj, Wall.WALL_BOTTOM);
-        	checkWallCollision(_obj, Wall.WALL_FAR);
-        	checkWallCollision(_obj, Wall.WALL_LEFT);
-        	checkWallCollision(_obj, Wall.WALL_NEAR);
-        	checkWallCollision(_obj, Wall.WALL_RIGHT);
-        	checkWallCollision(_obj, Wall.WALL_TOP);
+        void checkWallCollisions(Object3d obj){
+        	checkWallCollision(obj, Wall.WALL_BOTTOM);
+        	checkWallCollision(obj, Wall.WALL_FAR);
+        	checkWallCollision(obj, Wall.WALL_LEFT);
+        	checkWallCollision(obj, Wall.WALL_NEAR);
+        	checkWallCollision(obj, Wall.WALL_RIGHT);
+        	checkWallCollision(obj, Wall.WALL_TOP);
         }
-        void checkWallCollision(Sphere obj, Wall wall){
+        void checkWallCollision(Object3d obj, Wall wall){
         	if (testBallWallCollision(obj, wall)){
 
         		//Make the ball reflect off of the wall
@@ -183,12 +215,60 @@ public class Min3dWallpaper extends GLWallpaperService {
         	}
         }
         
-        boolean testBallWallCollision(Sphere obj, Wall wall){
+        boolean testBallWallCollision(Object3d obj, Wall wall){
         	Number3d dir = wallDirection(wall);
         	//Check whether the ball is far enough in the "dir" direction, and whether
         	//it is moving toward the wall
         	return Number3d.dot(obj.position(), dir) + 
         			obj.radius() > BOX_SIZE / 2 && Number3d.dot(obj.velocity(), dir) > 0;
+        }
+        
+      //Returns whether two balls are colliding
+        boolean testBallBallCollision(Object3d obj1, Object3d obj2) {
+        	//Check whether the balls are close enough
+        	float r = obj1.radius() + obj2.radius();
+        	Number3d obj1Clone = Number3d.subtract(obj1.position(), obj2.position());
+        	obj1Clone.subtract(obj2.position());
+        	if (obj1Clone.magnitudeSquared() < r * r) {
+        		//Check whether the balls are moving toward each other
+        		Number3d netVelocity = Number3d.subtract(obj1.velocity(), obj2.velocity());
+        		Number3d displacement = Number3d.subtract(obj1.position(), obj2.position());
+        		return Number3d.dot(netVelocity, displacement) < 0;
+        	}
+        	else
+        		return false;
+        }
+
+        //Handles all ball-ball collisions
+        void handleBallBallCollisions() {
+
+        	for (int i = 0; i < _scene.numChildren(); i++)
+        		for (int j = 0; j < _scene.numChildren(); j++) {
+        		
+        			if (i == j)
+        				continue;
+        			
+	        		Object3d b1 = _scene.getChildAt(i);
+	        		Object3d b2 = _scene.getChildAt(j);
+	        		if (testBallBallCollision(b1, b2)) {
+	        			//Make the balls reflect off of each other
+	        		
+	        			Number3d displacement = Number3d.subtract(b1.position(), b2.position());
+	        			displacement.normalize();
+	        			float objDot = Number3d.dot(b1.velocity(), displacement);
+	    	            displacement.multiply(objDot);
+	    	            displacement.multiply(2f);
+	    	            b1.velocity().subtract(displacement);
+	    	            
+	    	            displacement = Number3d.subtract(b1.position(), b2.position());
+	        			displacement.normalize();
+	        			objDot = Number3d.dot(b2.velocity(), displacement);
+	    	            displacement.multiply(objDot);
+	    	            displacement.multiply(2f);
+	    	            b2.velocity().subtract(displacement);
+	    	            
+	        		}
+        	}
         }
     }
     

@@ -11,7 +11,6 @@ import min3d.vos.Number3d;
  */
 public class Sphere extends Object3dContainer
 {
-	private float _radius;
 	private int _cols;
 	private int _rows;
 
@@ -29,7 +28,7 @@ public class Sphere extends Object3dContainer
 		_cols = $columns;
 		_rows = $rows;
 		_radius = $radius;
-
+		
 		build();
 	}
 
@@ -37,11 +36,6 @@ public class Sphere extends Object3dContainer
 	{
 		this($radius,$columns,$rows,true,true,true);
 	} 
-	
-
-	public float radius(){
-		return _radius;
-	}
 	
 	private void build()
 	{

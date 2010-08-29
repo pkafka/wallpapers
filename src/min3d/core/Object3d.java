@@ -22,6 +22,8 @@ public class Object3d
 	public final static double MASS_SOLID = 1000000;
 	
     public final static float TOUCH_SCALE_FACTOR = 180.0f / 320;
+
+	public float Radius;
 	  
 	double _mass = 10.0;
 	double _COR = 0.5;
@@ -51,6 +53,11 @@ public class Object3d
 	private boolean _pointSmoothing = true;
 	private float _lineWidth = 1f;
 	private boolean _lineSmoothing = false;
+	
+	protected float _radius;
+	public float radius(){
+		return _radius;
+	}
 
 	
 	protected ArrayList<Object3d> _children;

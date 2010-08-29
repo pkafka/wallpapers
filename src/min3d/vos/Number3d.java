@@ -162,6 +162,10 @@ public class Number3d
 		return ( v.x * w.x + v.y * w.y + w.z * v.z );
 	}
 	
+	public float magnitudeSquared(){
+		return x * x + y * y + z * z;
+	}
+	
 	
 	// * 	Math functions thanks to Papervision3D AS3 library
 	// 		http://code.google.com/p/papervision3d/
