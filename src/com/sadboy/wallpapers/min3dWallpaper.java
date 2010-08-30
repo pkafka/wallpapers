@@ -124,7 +124,7 @@ public class Min3dWallpaper extends GLWallpaperService {
         public void updateObject(Object3d obj, double elapsed){
         	
         	obj.updateLocationAndVelocity(elapsed);
-            
+             
         	float pitch = _sensor.getPitch();
         	obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
@@ -132,7 +132,7 @@ public class Min3dWallpaper extends GLWallpaperService {
     		float roll = _sensor.getRoll();
     		obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-        	checkWallCollisions(obj);
+        	checkWallCollisions(obj, elapsed);
         	
         	handleBallBallCollisions();
         }
@@ -193,15 +193,15 @@ public class Min3dWallpaper extends GLWallpaperService {
         	}
         }
         
-        void checkWallCollisions(Object3d obj){
-        	checkWallCollision(obj, Wall.WALL_BOTTOM);
-        	checkWallCollision(obj, Wall.WALL_FAR);
-        	checkWallCollision(obj, Wall.WALL_LEFT);
-        	checkWallCollision(obj, Wall.WALL_NEAR);
-        	checkWallCollision(obj, Wall.WALL_RIGHT);
-        	checkWallCollision(obj, Wall.WALL_TOP);
+        void checkWallCollisions(Object3d obj, double elapsed){
+        	checkWallCollision(obj, Wall.WALL_BOTTOM, elapsed);
+        	checkWallCollision(obj, Wall.WALL_FAR, elapsed);
+        	checkWallCollision(obj, Wall.WALL_LEFT, elapsed);
+        	checkWallCollision(obj, Wall.WALL_NEAR, elapsed);
+        	checkWallCollision(obj, Wall.WALL_RIGHT, elapsed);
+        	checkWallCollision(obj, Wall.WALL_TOP, elapsed);
         }
-        void checkWallCollision(Object3d obj, Wall wall){
+        void checkWallCollision(Object3d obj, Wall wall, double elapsed){
         	if (testBallWallCollision(obj, wall)){
 
         		//Make the ball reflect off of the wall
