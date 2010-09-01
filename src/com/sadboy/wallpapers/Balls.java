@@ -117,12 +117,14 @@ public class Balls extends GLWallpaperService {
         	elapsed = elapsed / 1000;
         	
         	for (int i = 0; i < _scene.numChildren(); i++)
-        		updateObject(_scene.getChildAt(i), elapsed);
+        		updateObject(_scene.getChildAt(i), elapsed, _sensor.getAccelerometer());
         
         	_renderer.onDrawFrame(gl);
         }
         
-        public void updateObject(Object3d obj, double elapsed){
+        public void updateObject(Object3d obj, double elapsed, Number3d accel){
+        	
+        	//obj.velocity().add(accel);
         	
         	obj.updateLocationAndVelocity(elapsed);
              
@@ -153,8 +155,8 @@ public class Balls extends GLWallpaperService {
         	_obj1 = new Sphere(.3f, 20, 15, false, false, true); 
     		_obj1.vertexColorsEnabled(true);
     		_obj1.position().z = -15;
-    		_obj1.position().x = 2;
-    		_obj1.position().y = 2;
+    		_obj1.position().x = 0.5f;
+    		_obj1.position().y = 1.0f;
     		_scene.addChild(_obj1);
     		
     		_obj2 = new Sphere(.3f, 20, 15, false, false, true); 
@@ -165,13 +167,13 @@ public class Balls extends GLWallpaperService {
     		_obj3 = new Sphere(.3f, 20, 15, false, false, true); 
     		_obj3.vertexColorsEnabled(true);
     		_obj3.position().z = -12;
-    		_obj3.position().x = 3;
+    		_obj3.position().x = .1f;
     		_scene.addChild(_obj3);
     		
     		_obj4 = new Sphere(.3f, 20, 15, false, false, true); 
     		_obj4.vertexColorsEnabled(true);
     		_obj4.position().z = -5;
-    		_obj4.position().x = 4;
+    		_obj4.position().x = 1.1f;
     		_scene.addChild(_obj4);
     	}
         
@@ -269,7 +271,6 @@ public class Balls extends GLWallpaperService {
 	    	            displacement.multiply(objDot);
 	    	            displacement.multiply(2f);
 	    	            b2.velocity().subtract(displacement);
-	    	            
 	        		}
         	}
         }

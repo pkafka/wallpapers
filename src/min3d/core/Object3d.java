@@ -128,6 +128,13 @@ public class Object3d
     
     public static void applyImpactCORSolid(Object3d obj1){
 
+		if (obj1.position().z > 1.0 && 
+				(obj1.velocity().z < .5 && obj1.velocity().z > -.5)){
+			obj1.velocity().z = 0;
+			obj1.position().z = 3;
+			return;
+		}
+    	
   	  obj1.velocity().x = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().x, 0);
   	  obj1.velocity().y = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().y, 0);
   	  obj1.velocity().z = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().z, 0);
