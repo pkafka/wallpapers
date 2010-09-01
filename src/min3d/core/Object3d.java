@@ -26,7 +26,7 @@ public class Object3d
 	public float Radius;
 	  
 	double _mass = 10.0;
-	double _COR = 0.5;
+	static double COR = 0.5;
 	
 	double _time;
 	
@@ -115,11 +115,28 @@ public class Object3d
     	_time = _time + dt;
     }
     
-    public void applyColission(){
-  	  double tmp = 1.0/(_mass + MASS_SOLID);
-  	  
-  	  _velocity.z = (float) ((_mass - _COR*MASS_SOLID)*_velocity.z*tmp +
-  	  				(1.0 + _COR)*MASS_SOLID*0.0*tmp);
+    public static void applyImpactCOR(Object3d obj1, Object3d obj2){
+
+    	  obj1.velocity().x = getResistanceVelocity(obj1._mass, obj2._mass, obj1.velocity().x, obj2.velocity().x);
+    	  obj1.velocity().y = getResistanceVelocity(obj1._mass, obj2._mass, obj1.velocity().y, obj2.velocity().y);
+    	  obj1.velocity().z = getResistanceVelocity(obj1._mass, obj2._mass, obj1.velocity().z, obj2.velocity().z);
+    	  
+    	  obj2.velocity().x = getResistanceVelocity(obj2._mass, obj1._mass, obj2.velocity().x, obj1.velocity().x);
+    	  obj2.velocity().y = getResistanceVelocity(obj2._mass, obj1._mass, obj2.velocity().y, obj1.velocity().y);
+    	  obj2.velocity().z = getResistanceVelocity(obj2._mass, obj1._mass, obj2.velocity().z, obj1.velocity().z);
+      }
+    
+    public static void applyImpactCORSolid(Object3d obj1){
+
+  	  obj1.velocity().x = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().x, 0);
+  	  obj1.velocity().y = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().y, 0);
+  	  obj1.velocity().z = getResistanceVelocity(obj1._mass, MASS_SOLID, obj1.velocity().z, 0);
+    }
+    
+    static float getResistanceVelocity(double mass1, double mass2, float v1, float v2){
+    	double tmp = 1.0/(mass1 + mass2);
+    	float vel = (float) ((mass1 - COR*mass2)*v1*tmp + (1.0 + COR)*mass2*v2*tmp);
+    	return vel * -1;
     }
     
     public void stop(){

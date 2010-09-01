@@ -10,29 +10,18 @@
         android:label="@string/wallpapers"
         android:icon="@drawable/icon" android:debuggable="true">
         
-        
-        
-
-         <activity android:name=".test.TouchRotateActivity"
-                  android:label="@string/wallpapers" android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-          
-        </activity>
-        <service
-            android:label="@string/wallpaper_cube"
-            android:name=".CubeWallpaper"
-            android:thumbnail="@drawable/icon"
-            android:icon="@drawable/icon"
+          <service
+            android:label="@string/wallpaper_balls"
+            android:name=".Balls"
+            android:thumbnail="@drawable/balls"
+            android:icon="@drawable/balls"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/cube" />
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/balls" />
         </service>
-                <service
+         <service
             android:label="@string/wallpaper_min3d"
             android:name=".Min3dWallpaper"
             android:thumbnail="@drawable/icon"
@@ -82,8 +71,8 @@
         <service
             android:label="@string/wallpaper_splatter"
             android:name=".Splatter"
-            android:thumbnail="@drawable/paint"
-            android:icon="@drawable/paint"
+            android:thumbnail="@drawable/splatter"
+            android:icon="@drawable/splatter"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />

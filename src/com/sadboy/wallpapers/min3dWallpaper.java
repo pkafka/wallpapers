@@ -9,6 +9,7 @@ import min3d.core.Object3d;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
 import min3d.vos.Light;
+import min3d.vos.LightType;
 import min3d.vos.Number3d;
 import android.content.Context;
 import android.view.MotionEvent;
@@ -53,6 +54,10 @@ public class Min3dWallpaper extends GLWallpaperService {
     	Sphere _obj2;
     	Sphere _obj3;
     	Sphere _obj4;
+    	
+    	Light _lightRed;
+    	Light _lightGreen;
+    	Light _lightBlue;
     	
     	final float BOX_SIZE = 6.0f;
     	
@@ -113,11 +118,9 @@ public class Min3dWallpaper extends GLWallpaperService {
         	
         	elapsed = elapsed / 1000;
         	
-        	updateObject(_obj1, elapsed);
-        	updateObject(_obj2, elapsed);
-        	updateObject(_obj3, elapsed);
-        	updateObject(_obj4, elapsed);
-        	
+        	for (int i = 0; i < _scene.numChildren(); i++)
+        		updateObject(_scene.getChildAt(i), elapsed);
+        
         	_renderer.onDrawFrame(gl);
         }
         
@@ -128,7 +131,6 @@ public class Min3dWallpaper extends GLWallpaperService {
         	float pitch = _sensor.getPitch();
         	obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
-
     		float roll = _sensor.getRoll();
     		obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
@@ -151,26 +153,27 @@ public class Min3dWallpaper extends GLWallpaperService {
         	_scene.lights().add( new Light() );
         	
         	_obj1 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj1.colorMaterialEnabled(false);
+    		_obj1.vertexColorsEnabled(true);
     		_obj1.position().z = -15;
     		_obj1.position().x = 2;
+    		_obj1.position().y = 2;
     		_scene.addChild(_obj1);
     		
     		_obj2 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj2.colorMaterialEnabled(false);
+    		_obj2.vertexColorsEnabled(false);
     		_obj2.position().z = -5;
     		_scene.addChild(_obj2);
     		
     		_obj3 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj3.colorMaterialEnabled(false);
+    		_obj3.vertexColorsEnabled(false);
     		_obj3.position().z = -12;
-    		_obj1.position().x = 5;
+    		_obj3.position().x = 3;
     		_scene.addChild(_obj3);
     		
     		_obj4 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj4.colorMaterialEnabled(false);
+    		_obj4.vertexColorsEnabled(false);
     		_obj4.position().z = -5;
-    		_obj1.position().x = 1;
+    		_obj4.position().x = 4;
     		_scene.addChild(_obj4);
     	}
         
@@ -212,6 +215,8 @@ public class Min3dWallpaper extends GLWallpaperService {
 	            dir.multiply(objDot);
 	            dir.multiply(2f);
 	            obj.velocity().subtract(dir);
+	            
+	            Object3d.applyImpactCORSolid(obj);
         	}
         }
         
