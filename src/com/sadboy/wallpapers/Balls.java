@@ -57,7 +57,13 @@ public class Balls extends GLWallpaperService {
     	Light _lightGreen;
     	Light _lightBlue;
     	
-    	final float BOX_SIZE = 6.0f;
+
+        final float PERIM_LEFT = -0.5f;
+        final float PERIM_RIGHT = 0.5f;
+        final float PERIM_TOP = 0.8f;
+        final float PERIM_BOTTOM = -0.8f;
+        final float PERIM_NEAR = 3;
+        final float PERIM_FAR = -50;
     	
     	//touch rotate vars
         float _downX, _downY, _previousX, _previousY;
@@ -129,10 +135,10 @@ public class Balls extends GLWallpaperService {
         	obj.updateLocationAndVelocity(elapsed);
              
         	float pitch = _sensor.getPitch();
-        	obj.position().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+        	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
     		float roll = _sensor.getRoll();
-    		obj.position().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    		obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     		
         	checkWallCollisions(obj, elapsed);
         	
@@ -220,14 +226,6 @@ public class Balls extends GLWallpaperService {
         	}
         }
         
-        boolean testBallWallCollision(Object3d obj, Wall wall){
-        	Number3d dir = wallDirection(wall);
-        	//Check whether the ball is far enough in the "dir" direction, and whether
-        	//it is moving toward the wall
-        	return Number3d.dot(obj.position(), dir) + 
-        			obj.radius() > BOX_SIZE / 2 && Number3d.dot(obj.velocity(), dir) > 0;
-        }
-        
       //Returns whether two balls are colliding
         boolean testBallBallCollision(Object3d obj1, Object3d obj2) {
         	//Check whether the balls are close enough
@@ -242,6 +240,28 @@ public class Balls extends GLWallpaperService {
         	}
         	else
         		return false;
+        }
+        
+        boolean testBallWallCollision(Object3d obj, Wall wall){
+        	Number3d dir = wallDirection(wall);
+        	//Check whether the ball is far enough in the "dir" direction, and whether
+        	//it is moving toward the wall
+        	
+        	switch (wall){
+        	case WALL_BOTTOM:
+            	return obj.position().y < PERIM_BOTTOM && Number3d.dot(obj.velocity(), dir) > 0;
+        	case WALL_TOP:
+        		return obj.position().y > PERIM_TOP && Number3d.dot(obj.velocity(), dir) > 0;
+        	case WALL_LEFT:
+        		return obj.position().x < PERIM_LEFT && Number3d.dot(obj.velocity(), dir) > 0;
+        	case WALL_RIGHT:
+        		return obj.position().x > PERIM_RIGHT && Number3d.dot(obj.velocity(), dir) > 0;
+        	case WALL_NEAR:
+        		return obj.position().z > PERIM_NEAR && Number3d.dot(obj.velocity(), dir) > 0;
+        	case WALL_FAR:
+        		return obj.position().z < PERIM_FAR && Number3d.dot(obj.velocity(), dir) > 0;
+        	}
+        	return false;
         }
 
         //Handles all ball-ball collisions
