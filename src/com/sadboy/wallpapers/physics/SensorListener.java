@@ -3,13 +3,11 @@ package com.sadboy.wallpapers.physics;
 import java.util.List;
 
 import min3d.vos.Number3d;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.GestureDetector;
 
 public class SensorListener implements SensorEventListener{
 
@@ -91,6 +89,11 @@ When the device lies flat on a table and is pushed toward the sky with an accele
         
         for (int i = 0; i < sl.size(); i++) {
         	if (sl.get(i).getType() == Sensor.TYPE_ORIENTATION){
+        		mSensor.registerListener(SensorListener.this,
+	                    sl.get(i),
+	                    SensorManager.SENSOR_DELAY_GAME);
+        	}
+        	else if (sl.get(i).getType() == Sensor.TYPE_ACCELEROMETER){
         		mSensor.registerListener(SensorListener.this,
 	                    sl.get(i),
 	                    SensorManager.SENSOR_DELAY_GAME);
