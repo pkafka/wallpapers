@@ -62,6 +62,14 @@ public class Renderer implements GLSurfaceView.Renderer
 		_activityManager = (ActivityManager) Shared.context().getSystemService( Context.ACTIVITY_SERVICE );
 		_memoryInfo = new ActivityManager.MemoryInfo();
 	}
+	
+
+	private final String NO_ERROR = "no error";
+	public void checkErrors(){
+		String drawError = GLU.gluErrorString(_gl.glGetError());
+        if (drawError != NO_ERROR)
+        	return;
+	}
 
 	public void onSurfaceCreated(GL10 $gl, EGLConfig eglConfig) 
 	{
@@ -203,7 +211,10 @@ public class Renderer implements GLSurfaceView.Renderer
 				// Check all of Light's properties for dirty 
 				
 				int glLightId = GL10.GL_LIGHT0 + _scene.lights().getGlIndexByLight(light);
-				
+		
+				if (light.isSpotlight()){
+					_gl.glLightf (glLightId, GL10.GL_SPOT_CUTOFF, 15.f);
+				}
 				if (light.position.isDirty())
 				{
 					light.commitPositionAndTypeBuffer();

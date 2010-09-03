@@ -17,12 +17,14 @@ import min3d.interfaces.IDirtyParent;
 public class Light extends AbstractDirtyManaged implements IDirtyParent
 {
 	private BooleanManaged _isVisible; 
+	private Boolean _isSpotlight;
 	
 	public Number3dManaged position;
 	public Color4Managed ambient;
 	public Color4Managed diffuse;
 	public Color4Managed specular;
 	public Color4Managed emissive;
+	public BooleanManaged isSpotlight;
 	
 	private LightType _type;
 	private Number3dManaged _attenuation; // (using the 3 properties of N3D for the 3 attenuation properties)
@@ -40,6 +42,7 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		 position = new Number3dManaged(0f, 0f, 5f, this);
 		 _attenuation = new Number3dManaged(1f,0f,0f, this); // (OpenGL default attenuation values)
 		 _isVisible = new BooleanManaged(true, this);
+		 isSpotlight = new BooleanManaged(false, this);
 		 type(LightType.DIRECTIONAL);
 		 
 		 _positionAndTypeFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
@@ -58,6 +61,12 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		_isVisible.set($b);
 	}
 	
+	public void isSpotlight(Boolean b){
+		_isSpotlight = b;
+	}
+	public boolean isSpotlight(){
+		return _isSpotlight;
+	}
 	//
 	
 	/**
