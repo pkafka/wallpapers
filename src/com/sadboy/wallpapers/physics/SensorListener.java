@@ -2,6 +2,7 @@ package com.sadboy.wallpapers.physics;
 
 import java.util.List;
 
+import min3d.core.Object3d;
 import min3d.vos.Number3d;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -75,10 +76,13 @@ When the device lies flat on a table and is pushed toward the sky with an accele
 	}
 	
 	public Number3d getAccelerometer(){
-		if (_accelerometer != null)
-			return new Number3d(_accelerometer[0], _accelerometer[1],_accelerometer[2]);
+		if (_accelerometer != null){
+			return new Number3d(((_accelerometer[0] * Object3d.TOUCH_SCALE_FACTOR) * .03f), 
+					((_accelerometer[1] * Object3d.TOUCH_SCALE_FACTOR) * .03f),
+					0);
+		}
 		else 
-			return new Number3d();
+			return null;
 	}
 	
 
