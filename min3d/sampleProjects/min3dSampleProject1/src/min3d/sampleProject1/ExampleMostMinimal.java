@@ -18,10 +18,7 @@ import min3d.vos.LightType;
  */
 public class ExampleMostMinimal extends RendererActivity
 {
-	Object3dContainer _cube;
-	
 	 double _lastDraw;
-     SensorListener _sensor;
      
      Random _r;
      
@@ -54,7 +51,6 @@ public class ExampleMostMinimal extends RendererActivity
 	
 	public void initScene() 
 	{
-		_sensor = new SensorListener(Shared.context());
         _lastDraw = System.currentTimeMillis();
         
         _r = new Random();
