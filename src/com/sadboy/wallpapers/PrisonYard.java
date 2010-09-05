@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import com.sadboy.wallpapers.physics.SensorListener;
 
 
-public class Balls extends GLWallpaperService {
+public class PrisonYard extends GLWallpaperService {
 
     public static final String SHARED_PREFS_NAME="wallpaper_settings";
 
@@ -44,19 +44,7 @@ public class Balls extends GLWallpaperService {
     	
     	min3d.core.Renderer _renderer;
     	public Scene _scene;
-    	
         double _lastDraw;
-        SensorListener _sensor;
-
-    	Sphere _obj1;
-    	Sphere _obj2;
-    	Sphere _obj3;
-    	Sphere _obj4;
-    	
-    	Light _lightRed;
-    	Light _lightGreen;
-    	Light _lightBlue;
-    	
 
         final float PERIM_LEFT = -0.5f;
         final float PERIM_RIGHT = 0.5f;
@@ -65,84 +53,27 @@ public class Balls extends GLWallpaperService {
         final float PERIM_NEAR = 3;
         final float PERIM_FAR = -50;
     	
-    	//touch rotate vars
-        float _downX, _downY, _previousX, _previousY;
     	
         public Min3dRenderer(Context c) {
-
     		Shared.context(getApplicationContext());
-    		
     		_scene = new Scene();
     		_renderer = new min3d.core.Renderer(_scene);
-    		
-            _sensor = new SensorListener(c);
             _lastDraw = System.currentTimeMillis();
         }
 
     	@Override
     	public void onTouchEvent(MotionEvent e) {
-            float x = e.getX();
-            float y = e.getY();
-            switch (e.getAction()) {
-    	        case MotionEvent.ACTION_MOVE:
-    	            float dx = x - _previousX;
-    	            float dy = y - _previousY;
-    	            _obj1.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
-    	            _obj1.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
-    	        break;
-    	        case MotionEvent.ACTION_DOWN:
-    	    	if (_obj1.position().z > -3.5){
-    	    		_downX = e.getX();
-    	    		_downY = e.getY();
-    	    	}
-    	    	break;
-    	        case MotionEvent.ACTION_UP:    	
-    	        	if (_obj1.position().z > -3.5 && 
-    	    			e.getX() < _downX + 30 &&
-    	    			e.getX() > _downX - 30 &&
-    	    			e.getY() < _downY + 30 &&
-    	    			e.getY() > _downY - 30 &&
-    	    			e.getEventTime() - e.getDownTime() < 1000){
-    	        		_obj1.velocity().z = -(e.getPressure() * 100);
-    	        	}
-    	    		break;
-            }
-            _previousX = x;
-            _previousY = y;
+           
     	}
         
         public void onDrawFrame(GL10 gl) {
 
-        	double time = System.currentTimeMillis();
-        	double elapsed = time - _lastDraw;
-        	_lastDraw = time;
-        	
-        	if (elapsed > 1000)
-        		elapsed = 60;
-        	
-        	elapsed = elapsed / 1000;
-        	
-        	for (int i = 0; i < _scene.numChildren(); i++)
-        		updateObject(_scene.getChildAt(i), elapsed, _sensor.getAccelerometer());
         
         	_renderer.onDrawFrame(gl);
         }
         
         public void updateObject(Object3d obj, double elapsed, Number3d accel){
-        	
-        	//obj.velocity().add(accel);
-        	
-        	obj.updateLocationAndVelocity(elapsed);
-             
-        	float pitch = _sensor.getPitch();
-        	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
-    		
-    		float roll = _sensor.getRoll();
-    		obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
-    		
-        	checkWallCollisions(obj, elapsed);
-        	
-        	handleBallBallCollisions();
+        
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -156,31 +87,7 @@ public class Balls extends GLWallpaperService {
         
         public void initScene() 
     	{
-        	_scene.lights().add( new Light() );
         	
-        	_obj1 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj1.vertexColorsEnabled(true);
-    		_obj1.position().z = -15;
-    		_obj1.position().x = 0.5f;
-    		_obj1.position().y = 1.0f;
-    		_scene.addChild(_obj1);
-    		
-    		_obj2 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj2.vertexColorsEnabled(true);
-    		_obj2.position().z = -5;
-    		_scene.addChild(_obj2);
-    		
-    		_obj3 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj3.vertexColorsEnabled(true);
-    		_obj3.position().z = -12;
-    		_obj3.position().x = .1f;
-    		_scene.addChild(_obj3);
-    		
-    		_obj4 = new Sphere(.3f, 20, 15, false, false, true); 
-    		_obj4.vertexColorsEnabled(true);
-    		_obj4.position().z = -5;
-    		_obj4.position().x = 1.1f;
-    		_scene.addChild(_obj4);
     	}
         
         Number3d wallDirection(Wall wall) {
@@ -264,36 +171,6 @@ public class Balls extends GLWallpaperService {
         	return false;
         }
 
-        //Handles all ball-ball collisions
-        void handleBallBallCollisions() {
-
-        	for (int i = 0; i < _scene.numChildren(); i++)
-        		for (int j = 0; j < _scene.numChildren(); j++) {
-        		
-        			if (i == j)
-        				continue;
-        			
-	        		Object3d b1 = _scene.getChildAt(i);
-	        		Object3d b2 = _scene.getChildAt(j);
-	        		if (testBallBallCollision(b1, b2)) {
-	        			//Make the balls reflect off of each other
-	        		
-	        			Number3d displacement = Number3d.subtract(b1.position(), b2.position());
-	        			displacement.normalize();
-	        			float objDot = Number3d.dot(b1.velocity(), displacement);
-	    	            displacement.multiply(objDot);
-	    	            displacement.multiply(2f);
-	    	            b1.velocity().subtract(displacement);
-	    	            
-	    	            displacement = Number3d.subtract(b1.position(), b2.position());
-	        			displacement.normalize();
-	        			objDot = Number3d.dot(b2.velocity(), displacement);
-	    	            displacement.multiply(objDot);
-	    	            displacement.multiply(2f);
-	    	            b2.velocity().subtract(displacement);
-	        		}
-        	}
-        }
     }
     
     public enum Wall {

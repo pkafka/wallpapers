@@ -22,15 +22,15 @@
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/balls" />
         </service>
          <service
-            android:label="@string/wallpaper_disco"
-            android:name=".DiscoWallpaper"
+            android:label="@string/wallpaper_prison"
+            android:name=".PrisonYard"
             android:thumbnail="@drawable/icon"
             android:icon="@drawable/icon"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/disco" />
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/prison" />
         </service>
         <service
             android:label="@string/wallpaper_fire"
