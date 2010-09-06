@@ -66,9 +66,8 @@ public class ExampleMostMinimal extends RendererActivity
     public boolean onTrackballEvent(MotionEvent event) {
     	 for (int i = 0; i < scene.lights().size(); i++) {
 			if (scene.lights().get(i).isSpotlight.get()){
-		    	 scene.lights().get(i).direction.setX(scene.lights().get(i).direction.getX() + event.getX() * TRACKBALL_SCALE_FACTOR);
+		    	 //scene.lights().get(i).direction.setX(scene.lights().get(i).direction.getX() + event.getX() * TRACKBALL_SCALE_FACTOR);
 		    	 scene.lights().get(i).direction.setY(scene.lights().get(i).direction.getY() + event.getY() * TRACKBALL_SCALE_FACTOR);
-		    	 scene.lights().get(i).direction.setZ(scene.lights().get(i).direction.getZ() + event.getY() * TRACKBALL_SCALE_FACTOR);
 		    	 scene.lights().get(i).isSpotlight.setDirtyFlag();
 		    	 scene.lights().get(i).isSpotlight.set(true);
 			}
