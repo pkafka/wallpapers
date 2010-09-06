@@ -47,6 +47,7 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		 type(LightType.DIRECTIONAL);
 		 
 		 _positionAndTypeFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
+		 _directionFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
 		 
 		 setDirtyFlag();
 	}

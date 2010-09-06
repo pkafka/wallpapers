@@ -39,14 +39,15 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		 diffuse = new Color4Managed(255,255,255, 255, this);
 		 specular = new Color4Managed(0,0,0,255, this);
 		 emissive = new Color4Managed(0,0,0,255, this);
-		 position = new Number3dManaged(0f, 0f, 5f, this);
-		 direction = new Number3dManaged(0f, 0f, -5f, this);
+		 position = new Number3dManaged(0f, 0f, 10f, this);
+		 direction = new Number3dManaged(0f, 0f, -10f, this);
 		 _attenuation = new Number3dManaged(1f,0f,0f, this); // (OpenGL default attenuation values)
 		 _isVisible = new BooleanManaged(true, this);
 		 isSpotlight = new BooleanManaged(false, this);
 		 type(LightType.DIRECTIONAL);
 		 
 		 _positionAndTypeFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
+		 _directionFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
 		 
 		 setDirtyFlag();
 	}

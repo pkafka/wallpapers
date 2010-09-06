@@ -6,8 +6,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
 import min3d.core.Object3d;
+import min3d.core.Object3dContainer;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
+import min3d.parser.IParser;
+import min3d.parser.Parser;
 import min3d.vos.Light;
 import min3d.vos.Number3d;
 import android.content.Context;
@@ -181,6 +184,14 @@ public class Balls extends GLWallpaperService {
     		_obj4.position().z = -5;
     		_obj4.position().x = 1.1f;
     		_scene.addChild(_obj4);
+    		
+    		IParser parser = Parser.createParser(Parser.Type.OBJ,
+    				getResources(), "com.sadboy.wallpapers:raw/wall_obj", true);
+    		parser.parse();
+
+    		Object3dContainer obj1 = parser.getParsedObject();
+    		obj1.scale().x = obj1.scale().y = obj1.scale().z = 1.7f;
+    		_scene.addChild(obj1);
     	}
         
         Number3d wallDirection(Wall wall) {
