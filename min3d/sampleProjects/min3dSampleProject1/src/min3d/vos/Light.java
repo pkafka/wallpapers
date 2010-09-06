@@ -129,6 +129,7 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		emissive.setDirtyFlag();
 		_attenuation.setDirtyFlag();
 		_isVisible.setDirtyFlag();
+		isSpotlight.setDirtyFlag();
 	}
 	
 	@Override
@@ -183,9 +184,6 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 	
 	public void commitDirectionBuffer()
 	{
-		// GL_POSITION takes 4 arguments, the first 3 being x/y/z position, 
-		// and the 4th being what we're calling 'type' (positional or directional)
-		
 		_directionFloatBuffer.position(0);
 		_directionFloatBuffer.put(direction.getX());
 		_directionFloatBuffer.put(direction.getY());

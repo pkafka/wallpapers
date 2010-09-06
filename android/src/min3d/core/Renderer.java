@@ -204,7 +204,7 @@ public class Renderer implements GLSurfaceView.Renderer
 				
 				int glLightId = GL10.GL_LIGHT0 + _scene.lights().getGlIndexByLight(light);
 				
-				if (light.isSpotlight.isDirty()){
+				if (light.isSpotlight.isDirty() && light.isSpotlight.get()){
 					light.commitDirectionBuffer();
 					_gl.glLightfv(glLightId, GL10.GL_SPOT_DIRECTION, light.directionBuffer());
 			        //angle of the cone light emitted by the spot : value between 0 to 180

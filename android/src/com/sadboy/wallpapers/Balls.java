@@ -186,7 +186,7 @@ public class Balls extends GLWallpaperService {
     		_scene.addChild(_obj4);
     		
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
-    				getResources(), "com.sadboy.wallpapers:raw/wall_obj", true);
+    				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
     		parser.parse();
 
     		Object3dContainer obj1 = parser.getParsedObject();
