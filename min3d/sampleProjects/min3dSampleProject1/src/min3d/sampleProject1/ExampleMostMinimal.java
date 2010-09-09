@@ -30,12 +30,10 @@ public class ExampleMostMinimal extends RendererActivity
      private float mPreviousX;
      private float mPreviousY;
 
-     final float PERIM_LEFT = -0.5f;
-     final float PERIM_RIGHT = 0.5f;
-     final float PERIM_TOP = 0.8f;
-     final float PERIM_BOTTOM = -0.8f;
-     final float PERIM_NEAR = 3;
-     final float PERIM_FAR = -20;
+     final float PERIM_LEFT = -150.5f;
+     final float PERIM_RIGHT = 150.5f;
+     final float PERIM_TOP = 150.8f;
+     final float PERIM_BOTTOM = -150.8f;
 
  	Object3dContainer obj1;
 	Object3dContainer _sphere;
@@ -95,8 +93,18 @@ public class ExampleMostMinimal extends RendererActivity
         _light.position.setZ(10);
         _light.direction.z = -100;
         _light.isSpotlight.set(true);
-        _light.velocity.x = .08f;
+        _light.velocity.x = 50f;
+        _light.velocity.y = 60f;
         scene.lights().add(_light);
+        
+        Light l = new Light();
+        l.type(LightType.POSITIONAL);
+        _light.position.setZ(10);
+        l.direction.z = -100;
+        l.isSpotlight.set(true);
+        l.velocity.x = 50f;
+        l.velocity.y = -40f;
+        scene.lights().add(l);
         
         
         _lightRed = new Light();
@@ -151,10 +159,6 @@ public class ExampleMostMinimal extends RendererActivity
     			return new Number3d(-1, 0, 0);
     		case WALL_RIGHT:
     			return new Number3d(1, 0, 0);
-    		case WALL_FAR:
-    			return new Number3d(0, 0, -1);
-    		case WALL_NEAR:
-    			return new Number3d(0, 0, 1);
     		case WALL_TOP:
     			return new Number3d(0, 1, 0);
     		case WALL_BOTTOM:
@@ -166,9 +170,7 @@ public class ExampleMostMinimal extends RendererActivity
     
     void checkWallCollisions(Light obj, double elapsed){
     	checkWallCollision(obj, Wall.WALL_BOTTOM, elapsed);
-    	checkWallCollision(obj, Wall.WALL_FAR, elapsed);
     	checkWallCollision(obj, Wall.WALL_LEFT, elapsed);
-    	checkWallCollision(obj, Wall.WALL_NEAR, elapsed);
     	checkWallCollision(obj, Wall.WALL_RIGHT, elapsed);
     	checkWallCollision(obj, Wall.WALL_TOP, elapsed);
     }
@@ -200,16 +202,12 @@ public class ExampleMostMinimal extends RendererActivity
     		return obj.direction.x < PERIM_LEFT && Number3d.dot(obj.velocity, dir) > 0;
     	case WALL_RIGHT:
     		return obj.direction.x > PERIM_RIGHT && Number3d.dot(obj.velocity, dir) > 0;
-    	case WALL_NEAR:
-    		return obj.direction.z > PERIM_NEAR && Number3d.dot(obj.velocity, dir) > 0;
-    	case WALL_FAR:
-    		return obj.direction.z < PERIM_FAR && Number3d.dot(obj.velocity, dir) > 0;
     	}
     	return false;
     }
 
 public enum Wall {
-	WALL_LEFT, WALL_RIGHT, WALL_FAR, WALL_NEAR, 
+	WALL_LEFT, WALL_RIGHT, 
 	WALL_TOP, WALL_BOTTOM
 }
 }
