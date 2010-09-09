@@ -28,8 +28,6 @@ public class Object3d
 	double _mass = 10.0;
 	static double COR = 0.5;
 	
-	double _time;
-	
 	private RenderType _renderType = RenderType.TRIANGLES;
 	private int _renderTypeInt = GL10.GL_TRIANGLES;
 	
@@ -110,9 +108,6 @@ public class Object3d
     	_position.y = (float) (_position.y + _velocity.y*dt);
     	_velocity.z = (float) (_velocity.z - G*dt);
     	_position.z = (float) (_position.z + _velocity.z*dt + 0.5*G*dt*dt);
-
-    	//  Update time;
-    	_time = _time + dt;
     }
     
     public static void applyImpactCOR(Object3d obj1, Object3d obj2){

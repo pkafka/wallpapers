@@ -1,6 +1,8 @@
 
 package com.sadboy.wallpapers;
 
+import java.util.Random;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -12,6 +14,7 @@ import min3d.objectPrimitives.Sphere;
 import min3d.parser.IParser;
 import min3d.parser.Parser;
 import min3d.vos.Light;
+import min3d.vos.LightType;
 import min3d.vos.Number3d;
 import android.content.Context;
 import android.view.MotionEvent;
@@ -59,9 +62,16 @@ public class PrisonYard extends GLWallpaperService {
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
         final float PERIM_FAR = -20;
+        
+    	/* Spot animation */
+    	private int sensSpot = 1;
+    	private float radius = 0.02f;
+    	private float teta;
     	
      	Light _light;
     	Light _lightRed;
+     	Object3dContainer obj1;
+     	int _count;
     	
         public Min3dRenderer(Context c) {
     		Shared.context(getApplicationContext());
@@ -72,17 +82,37 @@ public class PrisonYard extends GLWallpaperService {
 
     	@Override
     	public void onTouchEvent(MotionEvent e) {
-           
+
+            _lightRed.isVisible(!_lightRed.isVisible());
     	}
+    	
         
         public void onDrawFrame(GL10 gl) {
-
+        	
+    		double time = System.currentTimeMillis();
+        	double elapsed = time - _lastDraw;
+        	_lastDraw = time;
+        	
+        	elapsed = elapsed / 1000;
+        	
+        	
+        	
+        
+    		for (int i = 0; i < _scene.lights().size(); i++) {
+    			if (_scene.lights().get(i).isSpotlight.get()){
+    		    	 _scene.lights().get(i).isSpotlight.setDirtyFlag();
+    		    	 _scene.lights().get(i).isSpotlight.set(true);
+    			}
+    		}
+    
+    		if (_count > 1000)
+    			_count = 0;
+    		_count++;
+    		
+    		short mag = (short)(255 - (_count % 60) * (255/60));
+    		_lightRed.diffuse.r(mag);
         
         	_renderer.onDrawFrame(gl);
-        }
-        
-        public void updateObject(Object3d obj, double elapsed, Number3d accel){
-        
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -96,13 +126,33 @@ public class PrisonYard extends GLWallpaperService {
         
         public void initScene() 
     	{
-        	IParser parser = Parser.createParser(Parser.Type.OBJ,
-    				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
+            _lastDraw = System.currentTimeMillis();
+           
+            _light = new Light();
+            _light.type(LightType.POSITIONAL);
+            _light.position.setZ(10);
+            _light.direction.setZ(-100);
+            _light.isSpotlight.set(true);
+            _scene.lights().add(_light);
+            
+            
+            _lightRed = new Light();
+    		_lightRed.ambient.setAll(0x88110000);
+    		_lightRed.diffuse.setAll(0xffff0000);
+    		_lightRed.type(LightType.POSITIONAL); 
+    		_scene.lights().add(_lightRed);
+    		_lightRed.isVisible(false);
+            
+    		IParser parser = Parser.createParser(Parser.Type.OBJ,
+    				getResources(), "com.sadboy.wallpapers:raw/wall_obj", true);
     		parser.parse();
 
-    		Object3dContainer obj1 = parser.getParsedObject();
+    		obj1 = parser.getParsedObject();
     		obj1.scale().x = obj1.scale().y = obj1.scale().z = 1.7f;
+    		obj1.position().z += -5;
     		_scene.addChild(obj1);
+    		
+    		
     	}
         
         Number3d wallDirection(Wall wall) {
@@ -146,22 +196,6 @@ public class PrisonYard extends GLWallpaperService {
 	            
 	            Object3d.applyImpactCORSolid(obj);
         	}
-        }
-        
-      //Returns whether two balls are colliding
-        boolean testBallBallCollision(Object3d obj1, Object3d obj2) {
-        	//Check whether the balls are close enough
-        	float r = obj1.radius() + obj2.radius();
-        	Number3d obj1Clone = Number3d.subtract(obj1.position(), obj2.position());
-        	obj1Clone.subtract(obj2.position());
-        	if (obj1Clone.magnitudeSquared() < r * r) {
-        		//Check whether the balls are moving toward each other
-        		Number3d netVelocity = Number3d.subtract(obj1.velocity(), obj2.velocity());
-        		Number3d displacement = Number3d.subtract(obj1.position(), obj2.position());
-        		return Number3d.dot(netVelocity, displacement) < 0;
-        	}
-        	else
-        		return false;
         }
         
         boolean testBallWallCollision(Object3d obj, Wall wall){

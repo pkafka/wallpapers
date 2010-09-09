@@ -2,6 +2,7 @@ package min3d.sampleProject1;
 
 import java.util.Random;
 
+import min3d.core.Object3d;
 import min3d.core.Object3dContainer;
 import min3d.core.RendererActivity;
 import min3d.objectPrimitives.Sphere;
@@ -9,6 +10,7 @@ import min3d.parser.IParser;
 import min3d.parser.Parser;
 import min3d.vos.Light;
 import min3d.vos.LightType;
+import min3d.vos.Number3d;
 import android.view.MotionEvent;
 
 /**
@@ -38,14 +40,6 @@ public class ExampleMostMinimal extends RendererActivity
  	Object3dContainer obj1;
 	Object3dContainer _sphere;
  	
-	/* Spot positioning */
-	private float xSpotDir = 0.0f;
-	private float ySpotDir = 0.0f;
-	/* Spot animation */
-	private int sensSpot = 1;
-	private float radius = 0.02f;
-	private float teta;
- 	
  	Light _light;
 	Light _lightRed;
  	
@@ -74,8 +68,8 @@ public class ExampleMostMinimal extends RendererActivity
     public boolean onTrackballEvent(MotionEvent event) {
     	 for (int i = 0; i < scene.lights().size(); i++) {
 			if (scene.lights().get(i).isSpotlight.get()){
-		    	 scene.lights().get(i).direction.setX(scene.lights().get(i).direction.getX() + event.getX() * TRACKBALL_SCALE_FACTOR);
-		    	 scene.lights().get(i).direction.setY(scene.lights().get(i).direction.getY() + event.getY() * TRACKBALL_SCALE_FACTOR);
+		    	 scene.lights().get(i).direction.x = scene.lights().get(i).direction.x + event.getX() * TRACKBALL_SCALE_FACTOR;
+		    	 scene.lights().get(i).direction.y = scene.lights().get(i).direction.y + event.getY() * TRACKBALL_SCALE_FACTOR;
 		    	 scene.lights().get(i).isSpotlight.setDirtyFlag();
 		    	 scene.lights().get(i).isSpotlight.set(true);
 			}
@@ -99,8 +93,9 @@ public class ExampleMostMinimal extends RendererActivity
         _light = new Light();
         _light.type(LightType.POSITIONAL);
         _light.position.setZ(10);
-        _light.direction.setZ(-100);
+        _light.direction.z = -100;
         _light.isSpotlight.set(true);
+        _light.velocity.x = .08f;
         scene.lights().add(_light);
         
         
@@ -133,40 +128,89 @@ public class ExampleMostMinimal extends RendererActivity
     	
     	elapsed = elapsed / 1000;
     	
-    	
-    	//Rotation of the spot direction
-		teta += 360.0f*elapsed;
-		if(teta >= 2*Math.PI) {
-			teta = (float)(teta%(2*Math.PI));
-		}
-
-		radius += sensSpot*1.0f*(time - _lastDraw)/5000;
-		if(radius > 1.5f) {
-			sensSpot = -1;
-		}
-		else if(radius <= 0.0f) {
-			sensSpot = 1;
-		}
-
-		xSpotDir = (float)(radius*Math.cos(teta));
-		ySpotDir = (float)(radius*Math.sin(teta));
-		
-		//_light.direction.setX(xSpotDir);
-		//_light.direction.setY(ySpotDir);
-		
-		//_light.isSpotlight.set(true);
-		//_light.isSpotlight.setDirtyFlag();
-    	
-		//obj1.rotation().y += 1;
-		//obj1.rotation().x += 2;
+    	 for (int i = 0; i < scene.lights().size(); i++) {
+    		 Light l = scene.lights().get(i);
+ 			if (l.isSpotlight.get()){
+ 		    	 
+ 		    	l.updateLocation(elapsed);
+ 		    	checkWallCollisions(l, elapsed);
+ 		    	 
+ 		    	 l.isSpotlight.setDirtyFlag();
+ 		    	 l.isSpotlight.set(true);
+ 			}
+ 		}
 		
 		_count++;
 		short mag = (short)(255 - (_count % 60) * (255/60));
 		_lightRed.diffuse.r(mag);
 	}
 	
+    Number3d wallDirection(Wall wall) {
+    	switch (wall) {
+    		case WALL_LEFT:
+    			return new Number3d(-1, 0, 0);
+    		case WALL_RIGHT:
+    			return new Number3d(1, 0, 0);
+    		case WALL_FAR:
+    			return new Number3d(0, 0, -1);
+    		case WALL_NEAR:
+    			return new Number3d(0, 0, 1);
+    		case WALL_TOP:
+    			return new Number3d(0, 1, 0);
+    		case WALL_BOTTOM:
+    			return new Number3d(0, -1, 0);
+    		default:
+    			return new Number3d(0, 0, 0);
+    	}
+    }
+    
+    void checkWallCollisions(Light obj, double elapsed){
+    	checkWallCollision(obj, Wall.WALL_BOTTOM, elapsed);
+    	checkWallCollision(obj, Wall.WALL_FAR, elapsed);
+    	checkWallCollision(obj, Wall.WALL_LEFT, elapsed);
+    	checkWallCollision(obj, Wall.WALL_NEAR, elapsed);
+    	checkWallCollision(obj, Wall.WALL_RIGHT, elapsed);
+    	checkWallCollision(obj, Wall.WALL_TOP, elapsed);
+    }
+    void checkWallCollision(Light obj, Wall wall, double elapsed){
+    	if (testBallWallCollision(obj, wall)){
 
-	
+    		//Make the ball reflect off of the wall
+        	Number3d dir = wallDirection(wall);
+            dir.normalize();
+            
+            float objDot = Number3d.dot(obj.velocity, dir);
+            dir.multiply(objDot);
+            dir.multiply(2f);
+            obj.velocity.subtract(dir);
+    	}
+    }
+    
+    boolean testBallWallCollision(Light obj, Wall wall){
+    	Number3d dir = wallDirection(wall);
+    	//Check whether the ball is far enough in the "dir" direction, and whether
+    	//it is moving toward the wall
+    	
+    	switch (wall){
+    	case WALL_BOTTOM:
+        	return obj.direction.y < PERIM_BOTTOM && Number3d.dot(obj.velocity, dir) > 0;
+    	case WALL_TOP:
+    		return obj.direction.y > PERIM_TOP && Number3d.dot(obj.velocity, dir) > 0;
+    	case WALL_LEFT:
+    		return obj.direction.x < PERIM_LEFT && Number3d.dot(obj.velocity, dir) > 0;
+    	case WALL_RIGHT:
+    		return obj.direction.x > PERIM_RIGHT && Number3d.dot(obj.velocity, dir) > 0;
+    	case WALL_NEAR:
+    		return obj.direction.z > PERIM_NEAR && Number3d.dot(obj.velocity, dir) > 0;
+    	case WALL_FAR:
+    		return obj.direction.z < PERIM_FAR && Number3d.dot(obj.velocity, dir) > 0;
+    	}
+    	return false;
+    }
+
+public enum Wall {
+	WALL_LEFT, WALL_RIGHT, WALL_FAR, WALL_NEAR, 
+	WALL_TOP, WALL_BOTTOM
 }
-
+}
 
