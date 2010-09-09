@@ -17,14 +17,15 @@ import min3d.interfaces.IDirtyParent;
 public class Light extends AbstractDirtyManaged implements IDirtyParent
 {
 	private BooleanManaged _isVisible; 
+	private Boolean _isSpotlight;
 	
-	public BooleanManaged isSpotlight;
 	public Number3dManaged position;
 	public Number3dManaged direction;
 	public Color4Managed ambient;
 	public Color4Managed diffuse;
 	public Color4Managed specular;
 	public Color4Managed emissive;
+	public BooleanManaged isSpotlight;
 	
 	private LightType _type;
 	private Number3dManaged _attenuation; // (using the 3 properties of N3D for the 3 attenuation properties)
@@ -39,15 +40,15 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		 diffuse = new Color4Managed(255,255,255, 255, this);
 		 specular = new Color4Managed(0,0,0,255, this);
 		 emissive = new Color4Managed(0,0,0,255, this);
-		 position = new Number3dManaged(0f, 0f, 5f, this);
-		 direction = new Number3dManaged(0f, 0f, -5f, this);
+		 position = new Number3dManaged(0f, 0f, 0f, this);
+		 direction = new Number3dManaged(0f, 0f, 0f, this);
 		 _attenuation = new Number3dManaged(1f,0f,0f, this); // (OpenGL default attenuation values)
 		 _isVisible = new BooleanManaged(true, this);
 		 isSpotlight = new BooleanManaged(false, this);
 		 type(LightType.DIRECTIONAL);
 		 
 		 _positionAndTypeFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
-		 _directionFloatBuffer = Utils.makeFloatBuffer4(0,0,0,0);
+		 _directionFloatBuffer = Utils.makeFloatBuffer3(0,0,0);
 		 
 		 setDirtyFlag();
 	}
@@ -63,6 +64,12 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		_isVisible.set($b);
 	}
 	
+	public void isSpotlight(Boolean b){
+		_isSpotlight = b;
+	}
+	public boolean isSpotlight(){
+		return _isSpotlight;
+	}
 	//
 	
 	/**
@@ -129,6 +136,7 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		emissive.setDirtyFlag();
 		_attenuation.setDirtyFlag();
 		_isVisible.setDirtyFlag();
+		isSpotlight.setDirtyFlag();
 	}
 	
 	@Override
@@ -183,9 +191,6 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 	
 	public void commitDirectionBuffer()
 	{
-		// GL_POSITION takes 4 arguments, the first 3 being x/y/z position, 
-		// and the 4th being what we're calling 'type' (positional or directional)
-		
 		_directionFloatBuffer.position(0);
 		_directionFloatBuffer.put(direction.getX());
 		_directionFloatBuffer.put(direction.getY());

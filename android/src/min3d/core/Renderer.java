@@ -208,8 +208,8 @@ public class Renderer implements GLSurfaceView.Renderer
 					light.commitDirectionBuffer();
 					_gl.glLightfv(glLightId, GL10.GL_SPOT_DIRECTION, light.directionBuffer());
 			        //angle of the cone light emitted by the spot : value between 0 to 180
-			        _gl.glLightf(glLightId, GL10.GL_SPOT_CUTOFF, 15.0f);
-			        _gl.glLightf(glLightId, GL10.GL_SPOT_EXPONENT, 128.0f);
+			        _gl.glLightf(glLightId, GL10.GL_SPOT_CUTOFF, 8.0f);
+			        _gl.glLightf(glLightId, GL10.GL_SPOT_EXPONENT, 100.0f);
 				}
 				if (light.position.isDirty())
 				{

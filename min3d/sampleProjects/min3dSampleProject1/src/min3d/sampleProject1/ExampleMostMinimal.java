@@ -4,6 +4,7 @@ import java.util.Random;
 
 import min3d.core.Object3dContainer;
 import min3d.core.RendererActivity;
+import min3d.objectPrimitives.Sphere;
 import min3d.parser.IParser;
 import min3d.parser.Parser;
 import min3d.vos.Light;
@@ -35,10 +36,17 @@ public class ExampleMostMinimal extends RendererActivity
      final float PERIM_FAR = -20;
 
  	Object3dContainer obj1;
- 	Object3dContainer obj2;
- 	Object3dContainer obj3;
+	Object3dContainer _sphere;
  	
- 	//Light _light;
+	/* Spot positioning */
+	private float xSpotDir = 0.0f;
+	private float ySpotDir = 0.0f;
+	/* Spot animation */
+	private int sensSpot = 1;
+	private float radius = 0.02f;
+	private float teta;
+ 	
+ 	Light _light;
 	Light _lightRed;
  	
  	final float BOX_SIZE = 6.0f;
@@ -54,8 +62,8 @@ public class ExampleMostMinimal extends RendererActivity
          case MotionEvent.ACTION_MOVE:
              float dx = x - mPreviousX;
              float dy = y - mPreviousY;
-             obj1.rotation().x += dx * TOUCH_SCALE_FACTOR;
-             obj1.rotation().y += dy * TOUCH_SCALE_FACTOR;
+             _sphere.rotation().x += dx * TOUCH_SCALE_FACTOR;
+             _sphere.rotation().y += dy * TOUCH_SCALE_FACTOR;
          }
          mPreviousX = x;
          mPreviousY = y;
@@ -78,24 +86,30 @@ public class ExampleMostMinimal extends RendererActivity
 	public void initScene() 
 	{
         _lastDraw = System.currentTimeMillis();
+
         
         _r = new Random();
         
         //scene.lights().add(new Light());
+        
+        _sphere = new Sphere(1.0f, 20, 15);
+		_sphere.vertexColorsEnabled(false);
+		//scene.addChild(_sphere);
        
-        Light l = new Light();
-        l.type(LightType.POSITIONAL);
-        l.position.setZ(10);
-        l.direction.setZ(-10);
-        l.isSpotlight.set(true);
-        scene.lights().add(l);
+        _light = new Light();
+        _light.type(LightType.POSITIONAL);
+        _light.position.setZ(10);
+        _light.direction.setZ(-100);
+        _light.isSpotlight.set(true);
+        scene.lights().add(_light);
+        
         
         _lightRed = new Light();
 		_lightRed.ambient.setAll(0x88110000);
 		_lightRed.diffuse.setAll(0xffff0000);
 		_lightRed.type(LightType.POSITIONAL); 
 		scene.lights().add(_lightRed);
-		
+        
 		IParser parser = Parser.createParser(Parser.Type.OBJ,
 				getResources(), "min3d.sampleProject1:raw/room_obj", true);
 		parser.parse();
@@ -104,18 +118,51 @@ public class ExampleMostMinimal extends RendererActivity
 		obj1.scale().x = obj1.scale().y = obj1.scale().z = 1.7f;
 		scene.addChild(obj1);
 		
+		
+		
 	}
 
 	@Override 
 	public void updateScene() 
 	{
-		//obj1.rotation().y += 1;
-		//obj1.rotation().x += 1;
+		double time = System.currentTimeMillis();
+    	double elapsed = time - _lastDraw;
+    	_lastDraw = time;
+    	
+    	elapsed = elapsed / 1000;
+    	
+    	/*
+    	//Rotation of the spot direction
+		teta += 360.0f*elapsed;
+		if(teta >= 2*Math.PI) {
+			teta = (float)(teta%(2*Math.PI));
+		}
+
+		radius += sensSpot*1.0f*(time - _lastDraw)/5000;
+		if(radius > 1.5f) {
+			sensSpot = -1;
+		}
+		else if(radius <= 0.0f) {
+			sensSpot = 1;
+		}
+
+		xSpotDir = (float)(radius*Math.cos(teta));
+		ySpotDir = (float)(radius*Math.sin(teta));
 		
+		_light.direction.setX(xSpotDir);
+		_light.direction.setY(ySpotDir);
+		
+		_light.isSpotlight.set(true);
+		_light.isSpotlight.setDirtyFlag();
+		
+		*/
+    	
+		//obj1.rotation().y += 1;
+		//obj1.rotation().x += 2;
+		
+		_count++;
 		short mag = (short)(255 - (_count % 60) * (255/60));
 		_lightRed.diffuse.r(mag);
-
-		_count++;
 	}
 	
 

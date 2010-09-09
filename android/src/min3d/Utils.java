@@ -68,4 +68,16 @@ public class Utils
 		buffer.position(0);
 		return buffer;
 	}
+	
+	public static FloatBuffer makeFloatBuffer3(float $a, float $b, float $c)
+	{
+		ByteBuffer b = ByteBuffer.allocateDirect(3 * BYTES_PER_FLOAT);
+		b.order(ByteOrder.nativeOrder());
+		FloatBuffer buffer = b.asFloatBuffer();
+		buffer.put($a);
+		buffer.put($b);
+		buffer.put($c);
+		buffer.position(0);
+		return buffer;
+	}
 }
