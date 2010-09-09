@@ -49,7 +49,6 @@ public class ExampleMostMinimal extends RendererActivity
  	Light _light;
 	Light _lightRed;
  	
- 	final float BOX_SIZE = 6.0f;
  	
  	//touch rotate vars
      float _downX, _downY, _previousX, _previousY;
@@ -67,6 +66,7 @@ public class ExampleMostMinimal extends RendererActivity
          }
          mPreviousX = x;
          mPreviousY = y;
+         _lightRed.isVisible(!_lightRed.isVisible());
          return true;
     }
      
@@ -74,7 +74,7 @@ public class ExampleMostMinimal extends RendererActivity
     public boolean onTrackballEvent(MotionEvent event) {
     	 for (int i = 0; i < scene.lights().size(); i++) {
 			if (scene.lights().get(i).isSpotlight.get()){
-		    	 //scene.lights().get(i).direction.setX(scene.lights().get(i).direction.getX() + event.getX() * TRACKBALL_SCALE_FACTOR);
+		    	 scene.lights().get(i).direction.setX(scene.lights().get(i).direction.getX() + event.getX() * TRACKBALL_SCALE_FACTOR);
 		    	 scene.lights().get(i).direction.setY(scene.lights().get(i).direction.getY() + event.getY() * TRACKBALL_SCALE_FACTOR);
 		    	 scene.lights().get(i).isSpotlight.setDirtyFlag();
 		    	 scene.lights().get(i).isSpotlight.set(true);
@@ -109,13 +109,15 @@ public class ExampleMostMinimal extends RendererActivity
 		_lightRed.diffuse.setAll(0xffff0000);
 		_lightRed.type(LightType.POSITIONAL); 
 		scene.lights().add(_lightRed);
+		_lightRed.isVisible(false);
         
 		IParser parser = Parser.createParser(Parser.Type.OBJ,
-				getResources(), "min3d.sampleProject1:raw/room_obj", true);
+				getResources(), "min3d.sampleProject1:raw/wall_obj", true);
 		parser.parse();
 
 		obj1 = parser.getParsedObject();
 		obj1.scale().x = obj1.scale().y = obj1.scale().z = 1.7f;
+		obj1.position().z += -5;
 		scene.addChild(obj1);
 		
 		
@@ -131,7 +133,7 @@ public class ExampleMostMinimal extends RendererActivity
     	
     	elapsed = elapsed / 1000;
     	
-    	/*
+    	
     	//Rotation of the spot direction
 		teta += 360.0f*elapsed;
 		if(teta >= 2*Math.PI) {
@@ -149,13 +151,11 @@ public class ExampleMostMinimal extends RendererActivity
 		xSpotDir = (float)(radius*Math.cos(teta));
 		ySpotDir = (float)(radius*Math.sin(teta));
 		
-		_light.direction.setX(xSpotDir);
-		_light.direction.setY(ySpotDir);
+		//_light.direction.setX(xSpotDir);
+		//_light.direction.setY(ySpotDir);
 		
-		_light.isSpotlight.set(true);
-		_light.isSpotlight.setDirtyFlag();
-		
-		*/
+		//_light.isSpotlight.set(true);
+		//_light.isSpotlight.setDirtyFlag();
     	
 		//obj1.rotation().y += 1;
 		//obj1.rotation().x += 2;

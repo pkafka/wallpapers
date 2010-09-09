@@ -77,7 +77,7 @@ public class SplashActivity extends ListActivity
 	
 	private String[] _strings = {
 			"\"Hello, Jupiter\"", 
-			"Minimal example", 
+			"Pat's Experiments", 
 			"Vertex colors", 
 			"Texture",
 			"Usage of Vertices class",		

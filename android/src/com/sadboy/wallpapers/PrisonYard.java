@@ -41,7 +41,6 @@ public class PrisonYard extends GLWallpaperService {
 		engine.setRenderMode(GLEngine.RENDERMODE_CONTINUOUSLY);
 		return engine;
     }
-
     
     private class Min3dRenderer implements GLWallpaperService.Renderer {
     	
@@ -49,13 +48,20 @@ public class PrisonYard extends GLWallpaperService {
     	public Scene _scene;
         double _lastDraw;
 
+        private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+        private final float TRACKBALL_SCALE_FACTOR = 36.0f;
+        private float mPreviousX;
+        private float mPreviousY;
+        
         final float PERIM_LEFT = -0.5f;
         final float PERIM_RIGHT = 0.5f;
         final float PERIM_TOP = 0.8f;
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
-        final float PERIM_FAR = -50;
+        final float PERIM_FAR = -20;
     	
+     	Light _light;
+    	Light _lightRed;
     	
         public Min3dRenderer(Context c) {
     		Shared.context(getApplicationContext());

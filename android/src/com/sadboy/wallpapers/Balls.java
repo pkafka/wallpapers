@@ -55,21 +55,20 @@ public class Balls extends GLWallpaperService {
     	Sphere _obj1;
     	Sphere _obj2;
     	Sphere _obj3;
-    	Sphere _obj4;
+    	
+    	Light _light;
+     	int _count;
     	
     	Object3dContainer _room;
     	
     	Light _lightRed;
-    	Light _lightGreen;
-    	Light _lightBlue;
     	
-
         final float PERIM_LEFT = -0.5f;
         final float PERIM_RIGHT = 0.5f;
         final float PERIM_TOP = 0.8f;
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
-        final float PERIM_FAR = -50;
+        final float PERIM_FAR = -10;
     	
     	//touch rotate vars
         float _downX, _downY, _previousX, _previousY;
@@ -117,7 +116,6 @@ public class Balls extends GLWallpaperService {
             _previousY = y;
     	}
 
-     	Light _light;
         public void onDrawFrame(GL10 gl) {
 
         	double time = System.currentTimeMillis();
@@ -131,10 +129,6 @@ public class Balls extends GLWallpaperService {
         	
         	for (int i = 0; i < _scene.numChildren(); i++)
         		updateObject(_scene.getChildAt(i), elapsed, _sensor.getAccelerometer());
-        
-
-    		_light.isSpotlight.set(true);
-    		_light.isSpotlight.setDirtyFlag();
     		
         	_renderer.onDrawFrame(gl);
         }
@@ -170,14 +164,7 @@ public class Balls extends GLWallpaperService {
         
         public void initScene() 
     	{
-        	//_scene.lights().add( new Light() );
-        	
-        	_light = new Light();
-            _light.type(LightType.POSITIONAL);
-            _light.position.setZ(10);
-            _light.direction.setZ(-100);
-            _light.isSpotlight.set(true);
-            _scene.lights().add(_light);
+        	_scene.lights().add( new Light() );
         	
         	_obj1 = new Sphere(.3f, 20, 15);
     		_obj1.position().z = -15;
@@ -191,18 +178,12 @@ public class Balls extends GLWallpaperService {
     		_obj2.vertexColorsEnabled(false);
     		_scene.addChild(_obj2);
     		
-    		_obj3 = new Sphere(.5f, 20, 15);
+    		_obj3 = new Sphere(.2f, 20, 15);
     		_obj3.vertexColorsEnabled(false);
     		_obj3.position().z = -12;
     		_obj3.position().x = .1f;
     		_scene.addChild(_obj3);
-    		
-    		_obj4 = new Sphere(1.0f, 20, 15);
-    		_obj4.vertexColorsEnabled(false);
-    		_obj4.position().z = -5;
-    		_obj4.position().x = 1.1f;
-    		_scene.addChild(_obj4);
-    		
+    
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
     				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
     		parser.parse();
@@ -251,7 +232,7 @@ public class Balls extends GLWallpaperService {
 	            dir.multiply(2f);
 	            obj.velocity().subtract(dir);
 	            
-	            //Object3d.applyImpactCORSolid(obj);
+	            Object3d.applyImpactCORSolid(obj);
         	}
         }
         
