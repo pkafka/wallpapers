@@ -54,21 +54,17 @@ public class Balls extends GLWallpaperService {
 
     	Sphere _obj1;
     	Sphere _obj2;
-    	Sphere _obj3;
     	
     	Light _light;
-     	int _count;
     	
     	Object3dContainer _room;
-    	
-    	Light _lightRed;
     	
         final float PERIM_LEFT = -0.5f;
         final float PERIM_RIGHT = 0.5f;
         final float PERIM_TOP = 0.8f;
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
-        final float PERIM_FAR = -10;
+        final float PERIM_FAR = -5;
     	
     	//touch rotate vars
         float _downX, _downY, _previousX, _previousY;
@@ -102,13 +98,14 @@ public class Balls extends GLWallpaperService {
     	    	}
     	    	break;
     	        case MotionEvent.ACTION_UP:    	
-    	        	if (_obj1.position().z > -3.5 && 
+    	        	if (_obj1.position().z > 1 && 
     	    			e.getX() < _downX + 30 &&
     	    			e.getX() > _downX - 30 &&
     	    			e.getY() < _downY + 30 &&
     	    			e.getY() > _downY - 30 &&
     	    			e.getEventTime() - e.getDownTime() < 1000){
     	        		_obj1.velocity().z = -(e.getPressure() * 100);
+    	        		_obj2.velocity().z = -(e.getPressure() * 100);
     	        	}
     	    		break;
             }
@@ -127,29 +124,40 @@ public class Balls extends GLWallpaperService {
         	
         	elapsed = elapsed / 1000;
         	
-        	for (int i = 0; i < _scene.numChildren(); i++)
-        		updateObject(_scene.getChildAt(i), elapsed, _sensor.getAccelerometer());
+        	float pitch = _sensor.getPitch();
+    		float roll = _sensor.getRoll();
+        	
+        	for (int i = 0; i < _scene.numChildren(); i++){
+        		updateObject(
+        				_scene.getChildAt(i), 
+        				elapsed, 
+        				_sensor.getAccelerometer(),
+        				roll,
+        				pitch);
+        	}
     		
         	_renderer.onDrawFrame(gl);
         }
         
-        public void updateObject(Object3d obj, double elapsed, Number3d accel){
+        public void updateObject(Object3d obj, 
+        		double elapsed, 
+        		Number3d accel, 
+        		float roll, 
+        		float pitch){
         	
         	if (obj == _room)
         		return;
         	
         	//obj.velocity().add(accel);
         	
-        	obj.updateLocationAndVelocity(elapsed);
-             
-        	float pitch = _sensor.getPitch();
-        	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+            if (obj.position().z > 2){
+            	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    			obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+            }
     		
-    		float roll = _sensor.getRoll();
-    		obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+        	obj.updateLocationAndVelocity(elapsed);
     		
         	checkWallCollisions(obj, elapsed);
-        	
         	handleBallBallCollisions();
         }
 
@@ -166,8 +174,17 @@ public class Balls extends GLWallpaperService {
     	{
         	_scene.lights().add( new Light() );
         	
+        	_light = new Light();
+            _light.type(LightType.POSITIONAL);
+            _light.position.setZ(10);
+            _light.direction.z = -100;
+            _light.isSpotlight.set(true);
+            _light.velocity.x = 50f;
+            _light.velocity.y = 60f;
+            _scene.lights().add(_light);
+        	
         	_obj1 = new Sphere(.3f, 20, 15);
-    		_obj1.position().z = -15;
+    		_obj1.position().z = -5;
     		_obj1.position().x = 0.5f;
     		_obj1.position().y = 1.0f;
     		_obj1.vertexColorsEnabled(false);
@@ -177,12 +194,6 @@ public class Balls extends GLWallpaperService {
     		_obj2.position().z = -5;
     		_obj2.vertexColorsEnabled(false);
     		_scene.addChild(_obj2);
-    		
-    		_obj3 = new Sphere(.2f, 20, 15);
-    		_obj3.vertexColorsEnabled(false);
-    		_obj3.position().z = -12;
-    		_obj3.position().x = .1f;
-    		_scene.addChild(_obj3);
     
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
     				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
@@ -285,6 +296,10 @@ public class Balls extends GLWallpaperService {
         			
 	        		Object3d b1 = _scene.getChildAt(i);
 	        		Object3d b2 = _scene.getChildAt(j);
+	        		
+	        		if (b1 == _room || b2 == _room)
+	        			continue;
+	        		
 	        		if (testBallBallCollision(b1, b2)) {
 	        			//Make the balls reflect off of each other
 	        		
