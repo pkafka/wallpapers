@@ -74,8 +74,16 @@ public class PrisonYard extends GLWallpaperService {
 
     	@Override
     	public void onTouchEvent(MotionEvent e) {
-
-            _lightRed.isVisible(!_lightRed.isVisible());
+    		if (e.getAction() == MotionEvent.ACTION_UP)
+    		{
+    			_lightRed.isVisible(false);
+    		}
+    		else
+    		{
+    			_lightRed.isVisible(true);
+    		}
+    		mPreviousX = e.getX();
+    		mPreviousY = e.getY();
     	}
     	
         
@@ -133,8 +141,8 @@ public class PrisonYard extends GLWallpaperService {
             l.position.setZ(10);
             l.direction.z = -100;
             l.isSpotlight.set(true);
-            l.velocity.x = 50f;
-            l.velocity.y = -40f;
+            l.velocity.x = 15f;
+            l.velocity.y = -20f;
             _scene.lights().add(l);
             
             Light l2 = new Light();
@@ -142,10 +150,9 @@ public class PrisonYard extends GLWallpaperService {
             l2.position.setZ(10);
             l2.direction.z = -100;
             l2.isSpotlight.set(true);
-            l2.velocity.x = 50f;
-            l2.velocity.y = 30f;
+            l2.velocity.x = -10f;
+            l2.velocity.y = -30f;
             _scene.lights().add(l2);
-            
             
             _lightRed = new Light();
     		_lightRed.ambient.setAll(0x88110000);
