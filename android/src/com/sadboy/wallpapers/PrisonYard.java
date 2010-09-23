@@ -130,12 +130,21 @@ public class PrisonYard extends GLWallpaperService {
             
             Light l = new Light();
             l.type(LightType.POSITIONAL);
-            _light.position.setZ(10);
+            l.position.setZ(10);
             l.direction.z = -100;
             l.isSpotlight.set(true);
             l.velocity.x = 50f;
             l.velocity.y = -40f;
             _scene.lights().add(l);
+            
+            Light l2 = new Light();
+            l2.type(LightType.POSITIONAL);
+            l2.position.setZ(10);
+            l2.direction.z = -100;
+            l2.isSpotlight.set(true);
+            l2.velocity.x = 50f;
+            l2.velocity.y = 30f;
+            _scene.lights().add(l2);
             
             
             _lightRed = new Light();
