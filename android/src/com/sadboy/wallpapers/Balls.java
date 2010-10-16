@@ -1,6 +1,8 @@
 
 package com.sadboy.wallpapers;
 
+import java.util.Random;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -51,9 +53,6 @@ public class Balls extends GLWallpaperService {
     	
         double _lastDraw;
         SensorListener _sensor;
-
-    	Sphere _obj1;
-    	Sphere _obj2;
     	
     	Light _light;
     	
@@ -65,9 +64,6 @@ public class Balls extends GLWallpaperService {
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
         final float PERIM_FAR = -5;
-    	
-    	//touch rotate vars
-        float _downX, _downY, _previousX, _previousY;
     	
         public Min3dRenderer(Context c) {
 
@@ -85,32 +81,17 @@ public class Balls extends GLWallpaperService {
             float x = e.getX();
             float y = e.getY();
             switch (e.getAction()) {
-    	        case MotionEvent.ACTION_MOVE:
-    	            float dx = x - _previousX;
-    	            float dy = y - _previousY;
-    	            _obj1.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
-    	            _obj1.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
-    	        break;
-    	        case MotionEvent.ACTION_DOWN:
-    	    	if (_obj1.position().z > -3.5){
-    	    		_downX = e.getX();
-    	    		_downY = e.getY();
-    	    	}
-    	    	break;
-    	        case MotionEvent.ACTION_UP:    	
-    	        	if (_obj1.position().z > 1 && 
-    	    			e.getX() < _downX + 30 &&
-    	    			e.getX() > _downX - 30 &&
-    	    			e.getY() < _downY + 30 &&
-    	    			e.getY() > _downY - 30 &&
-    	    			e.getEventTime() - e.getDownTime() < 1000){
-    	        		_obj1.velocity().z = -(e.getPressure() * 100);
-    	        		_obj2.velocity().z = -(e.getPressure() * 100);
+    	        case MotionEvent.ACTION_UP:   
+    	        	x = x * .001f;
+    	        	y = y * .001f;
+    	        	for (int i = 0; i < _scene.numChildren(); i++){
+    	        		Object3d obj = _scene.getChildAt(i);
+    	        		//TODO: make pressure equal to distance from touch
+    	        		obj.velocity().z = -(e.getPressure() * 100);
+    	        		obj.velocity().z = -(e.getPressure() * 100);
     	        	}
     	    		break;
             }
-            _previousX = x;
-            _previousY = y;
     	}
 
         public void onDrawFrame(GL10 gl) {
@@ -158,7 +139,7 @@ public class Balls extends GLWallpaperService {
         	obj.updateLocationAndVelocity(elapsed);
     		
         	checkWallCollisions(obj, elapsed);
-        	handleBallBallCollisions();
+        	//handleBallBallCollisions();
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -182,18 +163,16 @@ public class Balls extends GLWallpaperService {
             _light.velocity.x = 50f;
             _light.velocity.y = 60f;
             _scene.lights().add(_light);
-        	
-        	_obj1 = new Sphere(.3f, 20, 15);
-    		_obj1.position().z = -5;
-    		_obj1.position().x = 0.5f;
-    		_obj1.position().y = 1.0f;
-    		_obj1.vertexColorsEnabled(false);
-    		_scene.addChild(_obj1);
-    		
-    		_obj2 = new Sphere(.3f, 20, 15);
-    		_obj2.position().z = -5;
-    		_obj2.vertexColorsEnabled(false);
-    		_scene.addChild(_obj2);
+            
+        	Random r = new Random();
+            for (int i = 0; i < 25; i++){
+            	Sphere s = new Sphere(.15f, 10, 10);
+            	s.position().x = r.nextFloat();
+            	s.position().y = r.nextFloat();
+        		s.position().z = r.nextInt(15) * -1;
+        		s.vertexColorsEnabled(false);
+        		_scene.addChild(s);
+            }
     
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
     				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
