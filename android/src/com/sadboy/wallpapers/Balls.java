@@ -24,7 +24,10 @@ import com.sadboy.wallpapers.physics.SensorListener;
 
 public class Balls extends GLWallpaperService {
 
-    public static final String SHARED_PREFS_NAME="wallpaper_settings";
+    public static final String SHARED_PREFS_NAME="BallsSettings";
+    public static final String SHARED_PREFS_COUNT="BallsCount";
+    public static final String SHARED_PREFS_BALL_COLLISIONS="BallBallCollision";
+    public static final String SHARED_PREFS_LIGHT_COLOR="LightColor";
 
     @Override
     public void onCreate() {

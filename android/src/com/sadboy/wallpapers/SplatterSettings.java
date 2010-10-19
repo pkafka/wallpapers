@@ -20,8 +20,9 @@ public class SplatterSettings extends PreferenceActivity
         getPreferenceManager().setSharedPreferencesName(
                 Splatter.SHARED_PREFS_NAME);
         //addPreferencesFromResource(R.xml.splatter_settings);
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(
-                this);
+        getPreferenceManager()
+        .getSharedPreferences()
+        .registerOnSharedPreferenceChangeListener(this);
 	    setPreferenceScreen(createPreferenceHierarchy());
     }
    

@@ -1,6 +1,8 @@
 
 package com.sadboy.wallpapers;
 
+import java.util.Random;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -60,7 +62,6 @@ public class PrisonYard extends GLWallpaperService {
     	private float radius = 0.02f;
     	private float teta;
     	
-     	Light _light;
     	Light _lightRed;
      	Object3dContainer obj1;
      	int _count;
@@ -127,32 +128,27 @@ public class PrisonYard extends GLWallpaperService {
     	{
             _lastDraw = System.currentTimeMillis();
 
-            _light = new Light();
-            _light.type(LightType.POSITIONAL);
-            _light.position.setZ(10);
-            _light.direction.z = -100;
-            _light.isSpotlight.set(true);
-            _light.velocity.x = 50f;
-            _light.velocity.y = 60f;
-            _scene.lights().add(_light);
-            
-            Light l = new Light();
-            l.type(LightType.POSITIONAL);
-            l.position.setZ(10);
-            l.direction.z = -100;
-            l.isSpotlight.set(true);
-            l.velocity.x = 15f;
-            l.velocity.y = -20f;
-            _scene.lights().add(l);
-            
-            Light l2 = new Light();
-            l2.type(LightType.POSITIONAL);
-            l2.position.setZ(10);
-            l2.direction.z = -100;
-            l2.isSpotlight.set(true);
-            l2.velocity.x = -10f;
-            l2.velocity.y = -30f;
-            _scene.lights().add(l2);
+            Random r = new Random();
+            for (int i = 0; i < 3; i++){
+            	Light l = new Light();
+                l.type(LightType.POSITIONAL);
+                l.position.setZ(10);
+                l.direction.z = -100;
+                l.isSpotlight.set(true);
+                l.velocity.x = r.nextInt(75);
+                l.velocity.y = r.nextInt(75);
+                _scene.lights().add(l);
+            }
+            for (int i = 0; i < 3; i++){
+            	Light l = new Light();
+                l.type(LightType.POSITIONAL);
+                l.position.setZ(10);
+                l.direction.z = -100;
+                l.isSpotlight.set(true);
+                l.velocity.x = r.nextInt(75) * -1;
+                l.velocity.y = r.nextInt(75) * -1;
+                _scene.lights().add(l);
+            }
             
             _lightRed = new Light();
     		_lightRed.ambient.setAll(0x88110000);
@@ -166,8 +162,8 @@ public class PrisonYard extends GLWallpaperService {
     		parser.parse();
 
     		obj1 = parser.getParsedObject();
-    		obj1.scale().x = obj1.scale().y = obj1.scale().z = 1.7f;
-    		obj1.position().z += -5;
+    		obj1.scale().x = obj1.scale().y = obj1.scale().z = 2.7f;
+    		obj1.position().z += -15;
     		_scene.addChild(obj1);
     	}
         
