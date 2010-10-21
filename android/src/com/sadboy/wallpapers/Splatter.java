@@ -259,14 +259,8 @@ public class Splatter extends WallpaperService
         				mLastY > y - 30 &&
         				System.currentTimeMillis() - mTapTime < 750){
         			mTapCount = 0;
-        			//clear canvas
-        			if (mBlackAndWhite){
-            			mCanvas.drawColor(Color.BLACK);
-        			}
-        			else
-        				mCanvas.drawColor(Color.rgb(mRandom.nextInt(256), 
-                			mRandom.nextInt(256), 
-                			mRandom.nextInt(256)));
+
+        			setCanvasAndBitmat(null, mBitmap.getWidth(), mBitmap.getHeight());
         			
             		mTapCount = 0;
         			setLastTap(x, y);

@@ -189,12 +189,11 @@ public class FingerPaint extends WallpaperService {
         				mLastY > y - 30 &&
         				System.currentTimeMillis() - mTapTime < 750){
 
-        			mCanvas.drawColor(Color.rgb(mRandom.nextInt(256), 
-                			mRandom.nextInt(256), 
-                			mRandom.nextInt(256)));
+        		setCanvasAndBitmat(null, mBitmap.getWidth(), mBitmap.getHeight());
+        			
         			
         			mTapCount = 0;
-        			setLastTap(x, y);
+        			setLastTap(0, 0);
         			drawFrame();
         			drawFrame();
         			Toast.makeText(getApplicationContext(), "Double Tap: Cleared", Toast.LENGTH_SHORT).show();

@@ -63,6 +63,8 @@ public class PrisonYard extends GLWallpaperService {
     	private float teta;
     	
     	Light _lightRed;
+    	Light _lightBlue;
+    	Light _lightMain;
      	Object3dContainer obj1;
      	int _count;
     	
@@ -78,10 +80,12 @@ public class PrisonYard extends GLWallpaperService {
     		if (e.getAction() == MotionEvent.ACTION_UP)
     		{
     			_lightRed.isVisible(false);
+    			//_lightBlue.isVisible(false);
     		}
     		else
     		{
     			_lightRed.isVisible(true);
+    			//_lightBlue.isVisible(true);
     		}
     		mPreviousX = e.getX();
     		mPreviousY = e.getY();
@@ -109,8 +113,12 @@ public class PrisonYard extends GLWallpaperService {
      		}
     		
     		_count++;
+    		if (_count > 1000)
+    			_count = 0;
+    		
     		short mag = (short)(255 - (_count % 60) * (255/60));
     		_lightRed.diffuse.r(mag);
+    		//_lightBlue.diffuse.r((short) (mag / 2));
         
         	_renderer.onDrawFrame(gl);
         }
@@ -127,6 +135,13 @@ public class PrisonYard extends GLWallpaperService {
         public void initScene() 
     	{
             _lastDraw = System.currentTimeMillis();
+            
+            _lightMain = new Light();
+            _lightMain.type(LightType.POSITIONAL);
+            _lightMain.position.setZ(10);
+            _lightMain.direction.z = -100;
+            _lightMain.isSpotlight.set(true);
+            //_scene.lights().add(_lightMain);
 
             Random r = new Random();
             for (int i = 0; i < 3; i++){
@@ -156,6 +171,15 @@ public class PrisonYard extends GLWallpaperService {
     		_lightRed.type(LightType.POSITIONAL); 
     		_scene.lights().add(_lightRed);
     		_lightRed.isVisible(false);
+    		
+    		/*
+    		_lightBlue = new Light();
+    		_lightBlue.ambient.setAll(0x88000011);
+    		_lightBlue.diffuse.setAll(0xff0000ff);
+    		_lightBlue.type(LightType.POSITIONAL); 
+    		_scene.lights().add(_lightBlue);
+    		_lightBlue.isVisible(false);
+    		*/
             
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
     				getResources(), "com.sadboy.wallpapers:raw/wall_obj", true);
