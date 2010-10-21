@@ -183,7 +183,7 @@ public class Balls extends GLWallpaperService {
 
     		_room = parser.getParsedObject();
     		_room.scale().x = _room.scale().y = _room.scale().z = 1.7f;
-    		_scene.addChild(_room);
+    		//_scene.addChild(_room);
     	}
         
         Number3d wallDirection(Wall wall) {

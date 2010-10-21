@@ -80,6 +80,9 @@
             android:theme="@android:style/Theme.Light.WallpaperSettings"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".SeekBarPreference">
+        </activity>
 
     </application>
 </manifest>
