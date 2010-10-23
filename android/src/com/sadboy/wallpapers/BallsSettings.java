@@ -5,21 +5,22 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
-import android.preference.Preference.OnPreferenceClickListener;
 
 import com.sadboy.wallpapers.ColorPickerDialog.OnColorChangedListener;
 
 public class BallsSettings  extends PreferenceActivity 
 	implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String SHARED_PREFS_BLACKANDWHITE = "BALLS_BW";
+	protected static final String SHARED_PREFS_BLACKANDWHITE = "BALLS_BW";
 	protected static final String SHARED_PREFS_NAME = "BALLS_NAME";
 	protected static final String SHARED_PREFS_BACK_COLOR = "BALLS_BACK_COLOR";
-	private static final String SHARED_PREFS_RANDOM_COLOR = "BALLS_RANDOM";
+	protected static final String SHARED_PREFS_RANDOM_COLOR = "BALLS_RANDOM";
 	protected static final String SHARED_PREFS_BALL_COLOR = "BALLS_BALL_COLOR";
-	private static final String SHARED_PREFS_COUNT = null;
+	protected static final String SHARED_PREFS_COUNT = "BALLS_COUNT";
 
 	@Override
     protected void onCreate(Bundle icicle) {
@@ -72,16 +73,7 @@ public class BallsSettings  extends PreferenceActivity
 	   count.setTitle("Ball Count");
 	   count.setKey(BallsSettings.SHARED_PREFS_COUNT);
 	   count.setSummary("Set the number of balls shown (affects performance)");
-	   count.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-		@Override
-		public boolean onPreferenceClick(Preference preference) {
-			SharedPreferences sp =	getSharedPreferences(BallsSettings.SHARED_PREFS_NAME, 0);
-			SharedPreferences.Editor editor = sp.edit();
-			editor.putInt(BallsSettings.SHARED_PREFS_COUNT, count.getProgress());
-			editor.commit();
-			return true;
-		}
-	   });
+	   
 	   root.addPreference(count);
 	    
 	    CheckBoxPreference randomPaint = new CheckBoxPreference(this);

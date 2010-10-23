@@ -17,17 +17,14 @@ import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.MotionEvent;
 
 import com.sadboy.wallpapers.physics.SensorListener;
 
 
 public class Balls extends GLWallpaperService {
-
-    public static final String SHARED_PREFS_NAME="BallsSettings";
-    public static final String SHARED_PREFS_COUNT="BallsCount";
-    public static final String SHARED_PREFS_BALL_COLLISIONS="BallBallCollision";
-    public static final String SHARED_PREFS_LIGHT_COLOR="LightColor";
 
     @Override
     public void onCreate() {
@@ -49,7 +46,8 @@ public class Balls extends GLWallpaperService {
     }
 
     
-    private class Min3dRenderer implements GLWallpaperService.Renderer {
+    private class Min3dRenderer implements GLWallpaperService.Renderer ,
+    SharedPreferences.OnSharedPreferenceChangeListener {
     	
     	min3d.core.Renderer _renderer;
     	public Scene _scene;
@@ -59,7 +57,7 @@ public class Balls extends GLWallpaperService {
     	
     	Light _light;
     	
-    	Object3dContainer _room;
+    	//Object3dContainer _room;
     	
         final float PERIM_LEFT = -0.5f;
         final float PERIM_RIGHT = 0.5f;
@@ -67,6 +65,13 @@ public class Balls extends GLWallpaperService {
         final float PERIM_BOTTOM = -0.8f;
         final float PERIM_NEAR = 3;
         final float PERIM_FAR = -5;
+        
+        private SharedPreferences _prefs;
+		private int _backColor;
+		private int _ballColor;
+		private boolean _blackAndWhite;
+		private boolean _randomColors;
+		private int _ballCount;
     	
         public Min3dRenderer(Context c) {
 
@@ -77,6 +82,11 @@ public class Balls extends GLWallpaperService {
     		
             _sensor = new SensorListener(c);
             _lastDraw = System.currentTimeMillis();
+            
+            _prefs = Balls.this.getSharedPreferences(BallsSettings.SHARED_PREFS_NAME, 0);
+            _prefs.registerOnSharedPreferenceChangeListener(this);
+        	onSharedPreferenceChanged(_prefs, null);
+            loadPrefs();
         }
 
     	@Override
@@ -129,8 +139,8 @@ public class Balls extends GLWallpaperService {
         		float roll, 
         		float pitch){
         	
-        	if (obj == _room)
-        		return;
+        	//if (obj == _room)
+        		//return;
         	
         	//obj.velocity().add(accel);
         	
@@ -168,7 +178,7 @@ public class Balls extends GLWallpaperService {
             _scene.lights().add(_light);
             
         	Random r = new Random();
-            for (int i = 0; i < 25; i++){
+            for (int i = 0; i < _ballCount; i++){
             	Sphere s = new Sphere(.15f, 10, 10);
             	s.position().x = r.nextFloat();
             	s.position().y = r.nextFloat();
@@ -177,13 +187,15 @@ public class Balls extends GLWallpaperService {
         		_scene.addChild(s);
             }
     
+            /*
     		IParser parser = Parser.createParser(Parser.Type.OBJ,
     				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
     		parser.parse();
 
     		_room = parser.getParsedObject();
     		_room.scale().x = _room.scale().y = _room.scale().z = 1.7f;
-    		//_scene.addChild(_room);
+    		_scene.addChild(_room);
+    		*/
     	}
         
         Number3d wallDirection(Wall wall) {
@@ -279,8 +291,8 @@ public class Balls extends GLWallpaperService {
 	        		Object3d b1 = _scene.getChildAt(i);
 	        		Object3d b2 = _scene.getChildAt(j);
 	        		
-	        		if (b1 == _room || b2 == _room)
-	        			continue;
+	        		//if (b1 == _room || b2 == _room)
+	        			//continue;
 	        		
 	        		if (testBallBallCollision(b1, b2)) {
 	        			//Make the balls reflect off of each other
@@ -301,6 +313,18 @@ public class Balls extends GLWallpaperService {
 	        		}
         	}
         }
+
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            loadPrefs();
+         }
+         
+         private void loadPrefs(){
+             _backColor = _prefs.getInt(BallsSettings.SHARED_PREFS_BACK_COLOR, Color.BLACK);
+             _ballColor = _prefs.getInt(BallsSettings.SHARED_PREFS_BALL_COLOR, Color.WHITE);
+             _ballCount = _prefs.getInt(BallsSettings.SHARED_PREFS_COUNT, 25);
+             _blackAndWhite = _prefs.getBoolean(BallsSettings.SHARED_PREFS_BLACKANDWHITE, true);
+             _randomColors = _prefs.getBoolean(BallsSettings.SHARED_PREFS_RANDOM_COLOR, false);
+         }
     }
     
     public enum Wall {
