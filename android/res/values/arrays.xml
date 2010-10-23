@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+
+	<string-array name="render_style">
+		<item>Fill</item>
+		<item>Points</item>
+		<item>Lines</item>
+	</string-array>
+	
+	<string-array name="entryvalues_list_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>  
+    </string-array>
+
+</resources>

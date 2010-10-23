@@ -16,9 +16,11 @@ import min3d.parser.Parser;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
+import min3d.vos.RenderType;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.sadboy.wallpapers.physics.SensorListener;
@@ -26,6 +28,8 @@ import com.sadboy.wallpapers.physics.SensorListener;
 
 public class Balls extends GLWallpaperService {
 
+    private final float TRACKBALL_SCALE_FACTOR = 36.0f;
+    
     @Override
     public void onCreate() {
         super.onCreate();
@@ -72,6 +76,10 @@ public class Balls extends GLWallpaperService {
 		private boolean _blackAndWhite;
 		private boolean _randomColors;
 		private int _ballCount;
+		private int _style;
+		private int _ballSize;
+		private float mPreviousX;
+		private float mPreviousY;
     	
         public Min3dRenderer(Context c) {
 
@@ -100,11 +108,23 @@ public class Balls extends GLWallpaperService {
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
     	        		//TODO: make pressure equal to distance from touch
+    	        		
     	        		obj.velocity().z = -(e.getPressure() * 100);
     	        		obj.velocity().z = -(e.getPressure() * 100);
     	        	}
-    	    		break;
+    	        	break;
+    	        case MotionEvent.ACTION_MOVE:
+    	        	float dx = x - mPreviousX;
+    	            float dy = y - mPreviousY;
+    	        	for (int i = 0; i < _scene.numChildren(); i++){
+    	        		Object3d obj = _scene.getChildAt(i);
+        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
+        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
+    	        	}
+    	        	break;
             }
+	        mPreviousX = x;
+	        mPreviousY = y;
     	}
 
         public void onDrawFrame(GL10 gl) {
@@ -172,17 +192,28 @@ public class Balls extends GLWallpaperService {
             _light.type(LightType.POSITIONAL);
             _light.position.setZ(10);
             _light.direction.z = -100;
-            _light.isSpotlight.set(true);
-            _light.velocity.x = 50f;
-            _light.velocity.y = 60f;
+            if (!_blackAndWhite){
+            	_light.ambient.setAll(_ballColor);
+    			_light.diffuse.setAll(_ballColor);
+            }
             _scene.lights().add(_light);
             
         	Random r = new Random();
             for (int i = 0; i < _ballCount; i++){
-            	Sphere s = new Sphere(.15f, 10, 10);
+            	
+            	Sphere s = new Sphere((float) (_ballSize * .001), 10, 10);
+            	
+            	if (_style == 1)
+            		s.renderType(RenderType.POINTS);
+            	else if (_style == 2)
+            		s.renderType(RenderType.LINES);
+            	else
+            		s.renderType(RenderType.TRIANGLES);
+            	
             	s.position().x = r.nextFloat();
             	s.position().y = r.nextFloat();
         		s.position().z = r.nextInt(15) * -1;
+        		
         		s.vertexColorsEnabled(false);
         		_scene.addChild(s);
             }
@@ -322,8 +353,13 @@ public class Balls extends GLWallpaperService {
              _backColor = _prefs.getInt(BallsSettings.SHARED_PREFS_BACK_COLOR, Color.BLACK);
              _ballColor = _prefs.getInt(BallsSettings.SHARED_PREFS_BALL_COLOR, Color.WHITE);
              _ballCount = _prefs.getInt(BallsSettings.SHARED_PREFS_COUNT, 25);
-             _blackAndWhite = _prefs.getBoolean(BallsSettings.SHARED_PREFS_BLACKANDWHITE, true);
-             _randomColors = _prefs.getBoolean(BallsSettings.SHARED_PREFS_RANDOM_COLOR, false);
+             _ballSize = _prefs.getInt(BallsSettings.SHARED_PREFS_SIZE, 150);
+             _blackAndWhite = _prefs.getBoolean(BallsSettings.SHARED_PREFS_BLACKANDWHITE, false);
+             _randomColors = _prefs.getBoolean(BallsSettings.SHARED_PREFS_RANDOM_COLOR, true);
+             try{
+            	 _style = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_STYLE, "0"));
+             }
+             catch(Exception ex){ _style = 0;}
          }
     }
     

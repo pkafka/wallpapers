@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>min3dSampleProject1</name>
+	<name>min3d</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -30,11 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src_min3d</name>
-			<type>2</type>
-			<location>C:/d/android/min3dSvn/trunk/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>

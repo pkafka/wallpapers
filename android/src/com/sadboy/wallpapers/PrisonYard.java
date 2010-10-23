@@ -144,7 +144,7 @@ public class PrisonYard extends GLWallpaperService {
             //_scene.lights().add(_lightMain);
 
             Random r = new Random();
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 2; i++){
             	Light l = new Light();
                 l.type(LightType.POSITIONAL);
                 l.position.setZ(10);
