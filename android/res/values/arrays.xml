@@ -9,7 +9,18 @@
 		<item>Lines</item>
 	</string-array>
 	
-	<string-array name="entryvalues_list_preference">
+	<string-array name="entryvalues_style">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>  
+    </string-array>
+    
+    <string-array name="render_theme">
+    <item>None</item>
+		<item>Black and White</item>
+		<item>Rainbow</item>
+	</string-array>
+		<string-array name="entryvalues_theme">
         <item>0</item>
         <item>1</item>
         <item>2</item>  

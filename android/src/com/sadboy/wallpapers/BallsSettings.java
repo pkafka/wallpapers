@@ -16,14 +16,13 @@ import com.sadboy.wallpapers.ColorPickerDialog.OnColorChangedListener;
 public class BallsSettings  extends PreferenceActivity 
 	implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-	protected static final String SHARED_PREFS_BLACKANDWHITE = "BALLS_BW";
 	protected static final String SHARED_PREFS_NAME = "BALLS_NAME";
 	protected static final String SHARED_PREFS_BACK_COLOR = "BALLS_BACK_COLOR";
-	protected static final String SHARED_PREFS_RANDOM_COLOR = "BALLS_RANDOM";
 	protected static final String SHARED_PREFS_BALL_COLOR = "BALLS_BALL_COLOR";
 	protected static final String SHARED_PREFS_COUNT = "BALLS_COUNT";
 	protected static final String SHARED_PREFS_SIZE = "BALLS_SIZE";
 	protected static final String SHARED_PREFS_STYLE = "BALLS_STYLE";
+	protected static final String SHARED_PREFS_THEME = "BALLS_THEME";
 
 	@Override
     protected void onCreate(Bundle icicle) {
@@ -43,7 +42,7 @@ public class BallsSettings  extends PreferenceActivity
     	// List preference
         ListPreference listPref = new ListPreference(this);
         listPref.setEntries(R.array.render_style);
-        listPref.setEntryValues(R.array.entryvalues_list_preference);
+        listPref.setEntryValues(R.array.entryvalues_style);
         listPref.setDialogTitle("Style");
         listPref.setKey(SHARED_PREFS_STYLE);
         listPref.setTitle("Render Style");
@@ -73,11 +72,15 @@ public class BallsSettings  extends PreferenceActivity
 	    PreferenceCategory cat = new PreferenceCategory(this);
 	    root.addPreference(cat);
 	    
-	    CheckBoxPreference togglePref = new CheckBoxPreference(this);
-	    togglePref.setKey(SHARED_PREFS_BLACKANDWHITE);
-	    togglePref.setTitle("Black & White");
-	    togglePref.setSummary("Choose black & white mode or uncheck for random colors");
-	    cat.addPreference(togglePref);
+	    ListPreference theme = new ListPreference(this);
+	    theme.setEntries(R.array.render_theme);
+	    theme.setEntryValues(R.array.entryvalues_theme);
+	    theme.setDialogTitle("Theme");
+	    theme.setKey(SHARED_PREFS_THEME);
+	    theme.setTitle("Color Theme");
+	    theme.setSummary("Preset color theme (overrides other color settings)");
+        cat.addPreference(theme);
+	    
 	    
 	    Preference paintColor = new Preference(this);
 	    paintColor.setKey(SHARED_PREFS_BALL_COLOR);

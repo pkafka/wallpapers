@@ -8,11 +8,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
 import min3d.core.Object3d;
-import min3d.core.Object3dContainer;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
-import min3d.parser.IParser;
-import min3d.parser.Parser;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
@@ -20,7 +17,6 @@ import min3d.vos.RenderType;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.sadboy.wallpapers.physics.SensorListener;
@@ -28,7 +24,6 @@ import com.sadboy.wallpapers.physics.SensorListener;
 
 public class Balls extends GLWallpaperService {
 
-    private final float TRACKBALL_SCALE_FACTOR = 36.0f;
     
     @Override
     public void onCreate() {
@@ -73,13 +68,12 @@ public class Balls extends GLWallpaperService {
         private SharedPreferences _prefs;
 		private int _backColor;
 		private int _ballColor;
-		private boolean _blackAndWhite;
-		private boolean _randomColors;
 		private int _ballCount;
 		private int _style;
 		private int _ballSize;
 		private float mPreviousX;
 		private float mPreviousY;
+		private int _theme;
     	
         public Min3dRenderer(Context c) {
 
@@ -186,17 +180,24 @@ public class Balls extends GLWallpaperService {
         
         public void initScene() 
     	{
-        	_scene.lights().add( new Light() );
+
+    		_scene.lights().add( new Light() );
+    		
+        	if (_theme != 2){
+        		//not rainbow
         	
-        	_light = new Light();
-            _light.type(LightType.POSITIONAL);
-            _light.position.setZ(10);
-            _light.direction.z = -100;
-            if (!_blackAndWhite){
-            	_light.ambient.setAll(_ballColor);
-    			_light.diffuse.setAll(_ballColor);
+	        	_light = new Light();
+	            _light.type(LightType.POSITIONAL);
+	            _light.position.setZ(10);
+	            _light.direction.z = -100;
+	            _scene.lights().add(_light);
+	            
+	            if (_theme != 1){
+	            	//not b&w
+	            	_light.ambient.setAll(_ballColor);
+	    			_light.diffuse.setAll(_ballColor);
+	            }
             }
-            _scene.lights().add(_light);
             
         	Random r = new Random();
             for (int i = 0; i < _ballCount; i++){
@@ -214,7 +215,14 @@ public class Balls extends GLWallpaperService {
             	s.position().y = r.nextFloat();
         		s.position().z = r.nextInt(15) * -1;
         		
-        		s.vertexColorsEnabled(false);
+        		if (_theme == 2){
+        			s.colorMaterialEnabled(true);
+        			s.vertexColorsEnabled(true);
+        		}
+        		else{
+        			s.vertexColorsEnabled(false);
+        		}
+        		
         		_scene.addChild(s);
             }
     
@@ -354,10 +362,15 @@ public class Balls extends GLWallpaperService {
              _ballColor = _prefs.getInt(BallsSettings.SHARED_PREFS_BALL_COLOR, Color.WHITE);
              _ballCount = _prefs.getInt(BallsSettings.SHARED_PREFS_COUNT, 25);
              _ballSize = _prefs.getInt(BallsSettings.SHARED_PREFS_SIZE, 150);
-             _blackAndWhite = _prefs.getBoolean(BallsSettings.SHARED_PREFS_BLACKANDWHITE, false);
-             _randomColors = _prefs.getBoolean(BallsSettings.SHARED_PREFS_RANDOM_COLOR, true);
+             _ballSize = _prefs.getInt(BallsSettings.SHARED_PREFS_SIZE, 150);
+             
+             
              try{
             	 _style = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_STYLE, "0"));
+             }
+             catch(Exception ex){ _style = 0;}
+             try{
+            	 _theme = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_THEME, "0"));
              }
              catch(Exception ex){ _style = 0;}
          }
