@@ -7,6 +7,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
+import min3d.Utils;
 import min3d.core.Object3dContainer;
 import min3d.core.Scene;
 import min3d.parser.IParser;
@@ -14,7 +15,9 @@ import min3d.parser.Parser;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
+import min3d.vos.TextureVo;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
 
@@ -67,11 +70,14 @@ public class PrisonYard extends GLWallpaperService {
     	Light _lightMain;
      	Object3dContainer obj1;
      	int _count;
+
+    	TextureVo _cloudTexture;
     	
         public Min3dRenderer(Context c) {
     		Shared.context(getApplicationContext());
     		_scene = new Scene();
     		_renderer = new min3d.core.Renderer(_scene);
+    		Shared.renderer(_renderer);
             _lastDraw = System.currentTimeMillis();
         }
 
@@ -93,6 +99,8 @@ public class PrisonYard extends GLWallpaperService {
     	
         
         public void onDrawFrame(GL10 gl) {
+        	
+        	//_cloudTexture.offsetU += 0.001f;	
         	
     		double time = System.currentTimeMillis();
         	double elapsed = time - _lastDraw;
@@ -118,7 +126,6 @@ public class PrisonYard extends GLWallpaperService {
     		
     		short mag = (short)(255 - (_count % 60) * (255/60));
     		_lightRed.diffuse.r(mag);
-    		//_lightBlue.diffuse.r((short) (mag / 2));
         
         	_renderer.onDrawFrame(gl);
         }
@@ -136,13 +143,6 @@ public class PrisonYard extends GLWallpaperService {
     	{
             _lastDraw = System.currentTimeMillis();
             
-            _lightMain = new Light();
-            _lightMain.type(LightType.POSITIONAL);
-            _lightMain.position.setZ(10);
-            _lightMain.direction.z = -100;
-            _lightMain.isSpotlight.set(true);
-            //_scene.lights().add(_lightMain);
-
             Random r = new Random();
             for (int i = 0; i < 2; i++){
             	Light l = new Light();

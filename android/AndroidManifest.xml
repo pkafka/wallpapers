@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android" package="com.sadboy.wallpapers" android:versionName="0.5.3" android:versionCode="11">
+    xmlns:android="http://schemas.android.com/apk/res/android" package="com.sadboy.wallpapers" android:versionCode="12" android:versionName="0.5.4">
 
     <uses-sdk android:minSdkVersion="7" />
     <uses-feature android:name="android.software.live_wallpaper" />
@@ -11,7 +11,7 @@
         android:icon="@drawable/icon" android:debuggable="true">
         
           <service
-            android:label="@string/wallpaper_balls"
+            android:label="Balls!"
             android:name=".Balls"
             android:thumbnail="@drawable/balls"
             android:icon="@drawable/balls"
@@ -22,7 +22,7 @@
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/balls" />
         </service>
          <service
-            android:label="@string/wallpaper_prison"
+            android:label="Prison Break"
             android:name=".PrisonYard"
             android:thumbnail="@drawable/icon"
             android:icon="@drawable/icon"
@@ -33,7 +33,7 @@
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/prison" />
         </service>
         <service
-            android:label="@string/wallpaper_fire"
+            android:label="Fire"
             android:name=".FireWallpaperService"
             android:thumbnail="@drawable/fire"
             android:icon="@drawable/icon"
@@ -47,7 +47,7 @@
         
         
         <service
-            android:label="@string/wallpaper_fingerPaint"
+            android:label="Finger Paint"
             android:name=".FingerPaint"
             android:thumbnail="@drawable/finger_paint"
             android:icon="@drawable/finger_paint"
@@ -58,7 +58,7 @@
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/paint" />
         </service>
         <service
-            android:label="@string/wallpaper_splatter"
+            android:label="Splatter"
             android:name=".Splatter"
             android:thumbnail="@drawable/splatter"
             android:icon="@drawable/splatter"

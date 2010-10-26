@@ -7,6 +7,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
+import min3d.Utils;
 import min3d.core.Object3d;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
@@ -15,8 +16,10 @@ import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
 import min3d.vos.RenderType;
+import min3d.vos.TextureVo;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.MotionEvent;
 
@@ -45,7 +48,6 @@ public class Balls extends GLWallpaperService {
 		return engine;
     }
 
-    
     private class Min3dRenderer implements GLWallpaperService.Renderer ,
     SharedPreferences.OnSharedPreferenceChangeListener {
     	
@@ -82,6 +84,7 @@ public class Balls extends GLWallpaperService {
     		
     		_scene = new Scene();
     		_renderer = new min3d.core.Renderer(_scene);
+    		Shared.renderer(_renderer);
     		
             _sensor = new SensorListener(c);
             _lastDraw = System.currentTimeMillis();
@@ -113,8 +116,8 @@ public class Balls extends GLWallpaperService {
     	            float dy = y - mPreviousY;
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
-        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
-        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
+	        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
+	        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
     	        	}
     	        	break;
             }
@@ -162,8 +165,11 @@ public class Balls extends GLWallpaperService {
             if (obj.position().z > 2){
             	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
     			obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    			
+    			obj.rotation().x += (pitch * Object3d.TOUCH_SCALE_FACTOR) * .05;
+    			obj.rotation().y -= (roll * Object3d.TOUCH_SCALE_FACTOR) * .05;
             }
-    		
+            
         	obj.updateLocationAndVelocity(elapsed);
     		
         	checkWallCollisions(obj, elapsed);
@@ -194,17 +200,38 @@ public class Balls extends GLWallpaperService {
 	            _light.direction.z = -100;
 	            _scene.lights().add(_light);
 	            
-	            if (_theme != 1){
-	            	//not b&w
+	            if (_theme == 0){
 	            	_light.ambient.setAll(_ballColor);
 	    			_light.diffuse.setAll(_ballColor);
 	            }
             }
+        	
+        	TextureVo t = null;
+        	if (_theme >= 3){
+        		Bitmap b = null;
+        		if (_theme == 3)
+        			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.earth);
+        		if (_theme == 4)
+        			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.beach_ball);
+        		if (_theme == 5)
+        			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.smiley);
+        		if (_theme == 6)
+        			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.google);
+        		if (_theme == 7)
+        			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.checkerboard);
+	    		Shared.textureManager().addTextureId(b, "texture", false);
+	    		b.recycle();
+	    		t = new TextureVo("texture");
+        	}
+    		
             
         	Random r = new Random();
             for (int i = 0; i < _ballCount; i++){
             	
             	Sphere s = new Sphere((float) (_ballSize * .001), 10, 10);
+            	
+            	if (t != null)
+            		s.textures().add(t);
             	
             	if (_style == 1)
             		s.renderType(RenderType.POINTS);
@@ -216,6 +243,9 @@ public class Balls extends GLWallpaperService {
             	s.position().x = r.nextFloat();
             	s.position().y = r.nextFloat();
         		s.position().z = r.nextInt(15) * -1;
+        		
+            	s.rotation().x = r.nextInt(100);
+            	s.rotation().y = r.nextInt(100);
         		
         		if (_theme == 2){
         			s.colorMaterialEnabled(true);

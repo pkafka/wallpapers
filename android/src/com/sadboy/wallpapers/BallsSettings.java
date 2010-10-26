@@ -78,7 +78,7 @@ public class BallsSettings  extends PreferenceActivity
 	    theme.setDialogTitle("Theme");
 	    theme.setKey(SHARED_PREFS_THEME);
 	    theme.setTitle("Color Theme");
-	    theme.setSummary("Preset color theme (overrides other color settings)");
+	    theme.setSummary("Preset color theme (overrides ball color)");
         cat.addPreference(theme);
 	    
 	    

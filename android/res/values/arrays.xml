@@ -19,11 +19,21 @@
     	<item>None</item>
 		<item>Black and White</item>
 		<item>Rainbow</item>
+		<item>Earth</item>
+		<item>Beach Ball</item>
+		<item>Smiley Face</item>
+		<item>Android</item>
+		<item>Checkerboard</item>
 	</string-array>
 		<string-array name="entryvalues_theme">
         <item>0</item>
         <item>1</item>
         <item>2</item>  
+        <item>3</item>  
+        <item>4</item>  
+        <item>5</item>  
+        <item>6</item>  
+        <item>7</item>  
     </string-array>
 
 </resources>

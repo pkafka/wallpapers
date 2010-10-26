@@ -18,13 +18,13 @@
     
     
     
-<string name="wallpaper_fingerPaint">Sloppy Canvas</string>
-<string name="wallpaper_splatter">Splatter</string>
+<string name="wallpaper_fingerPaint">Finger painting...</string>
+<string name="wallpaper_splatter">Paint Splatters</string>
 <string name="settings">Settings</string>
 
-<string name="wallpaper_cube">Cube</string>
+
 <string name="wallpaper_fire">Fire (http://mindtherobot.com)</string>
-<string name="wallpaper_min3d">min3d</string>
-<string name="wallpaper_prison">Prison Break (beta)</string>
-<string name="wallpaper_balls">Balls! (beta)</string>
+
+<string name="wallpaper_prison">Some Prison lights (beta/ more to come)</string>
+<string name="wallpaper_balls">Bouncy Balls...</string>
 </resources>
