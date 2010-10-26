@@ -104,14 +104,6 @@ public class BallsSettings  extends PreferenceActivity
 		});
 	    cat.addPreference(paintColor);
 	    
-	    /*
-	    CheckBoxPreference randomPaint = new CheckBoxPreference(this);
-	    randomPaint.setKey(SHARED_PREFS_RANDOM_COLOR);
-	    randomPaint.setTitle("Random Colors");
-	    randomPaint.setSummary("enable / disable random colors");
-	    randomPaint.setDefaultValue(false);
-	    cat.addPreference(randomPaint);
-	    
 	    Preference canvasColor = new Preference(this);
 	    canvasColor.setKey("canvas_color_picker");
 	    canvasColor.setTitle("Set back color");
@@ -133,7 +125,6 @@ public class BallsSettings  extends PreferenceActivity
 			}
 		});
 	    cat.addPreference(canvasColor);
-	    	*/
 	   
 	    
 	    }catch (Exception ex){

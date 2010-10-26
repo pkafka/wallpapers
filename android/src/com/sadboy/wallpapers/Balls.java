@@ -10,6 +10,7 @@ import min3d.Shared;
 import min3d.core.Object3d;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
+import min3d.vos.Color4Managed;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
@@ -179,8 +180,9 @@ public class Balls extends GLWallpaperService {
         }
         
         public void initScene() 
-    	{
-
+        {
+        	_scene.backgroundColor().setAll(_backColor);
+        	
     		_scene.lights().add( new Light() );
     		
         	if (_theme != 2){
@@ -363,7 +365,6 @@ public class Balls extends GLWallpaperService {
              _ballCount = _prefs.getInt(BallsSettings.SHARED_PREFS_COUNT, 25);
              _ballSize = _prefs.getInt(BallsSettings.SHARED_PREFS_SIZE, 150);
              _ballSize = _prefs.getInt(BallsSettings.SHARED_PREFS_SIZE, 150);
-             
              
              try{
             	 _style = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_STYLE, "0"));

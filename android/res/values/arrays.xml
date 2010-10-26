@@ -16,7 +16,7 @@
     </string-array>
     
     <string-array name="render_theme">
-    <item>None</item>
+    	<item>None</item>
 		<item>Black and White</item>
 		<item>Rainbow</item>
 	</string-array>
