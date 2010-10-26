@@ -34,11 +34,11 @@ public class MD2Parser extends AParser implements IParser {
 		if (textureAtlas.hasBitmaps()) {
 			textureAtlas.generate();
 			texture = textureAtlas.getBitmap();
-			Shared.textureManager().addTextureId(texture, "atlas", generateMipMap);
+			Shared.textureManager().addTextureId(texture, textureAtlas.getId(), generateMipMap);
 		}
 
 		Log.d(Min3d.TAG, "Creating object " + co.name);
-		animObj = co.getParsedObject(textureAtlas, frames);
+		animObj = co.getParsedObject(textureAtlas, materialMap, frames);
 
 		if (textureAtlas.hasBitmaps()) {
 			if (texture != null)

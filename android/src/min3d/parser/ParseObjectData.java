@@ -1,14 +1,17 @@
 package min3d.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.util.Log;
 
 import min3d.Min3d;
+import min3d.Shared;
 import min3d.animation.AnimationObject3d;
 import min3d.animation.KeyFrame;
 import min3d.core.Object3d;
 import min3d.parser.AParser.BitmapAsset;
+import min3d.parser.AParser.Material;
 import min3d.parser.AParser.TextureAtlas;
 import min3d.vos.Color4;
 import min3d.vos.Face;
@@ -42,27 +45,27 @@ public class ParseObjectData {
 		faces = new ArrayList<ParseObjectFace>();
 	}
 	
-	public AnimationObject3d getParsedObject(TextureAtlas textureAtlas, KeyFrame[] frames)
+	public AnimationObject3d getParsedObject(TextureAtlas textureAtlas, HashMap<String, Material> materialMap, KeyFrame[] frames)
 	{
 		AnimationObject3d obj = new AnimationObject3d(numFaces * 3, numFaces, frames.length);
 		obj.name(name);
 		obj.setFrames(frames);
 		
-		parseObject(obj, textureAtlas);
+		parseObject(obj, materialMap, textureAtlas);
 
 		return obj;
 	}
 	
-	public Object3d getParsedObject(TextureAtlas textureAtlas) {
+	public Object3d getParsedObject(HashMap<String, Material> materialMap, TextureAtlas textureAtlas) {
 		Object3d obj = new Object3d(numFaces * 3, numFaces);
 		obj.name(name);
 		
-		parseObject(obj, textureAtlas);
+		parseObject(obj, materialMap, textureAtlas);
 		
 		return obj;
 	}
 	
-	private void parseObject(Object3d obj, TextureAtlas textureAtlas)
+	private void parseObject(Object3d obj, HashMap<String, Material> materialMap, TextureAtlas textureAtlas)
 	{
 		int numFaces = faces.size();
 		int faceIndex = 0;
@@ -80,9 +83,18 @@ public class ParseObjectData {
 						: new Uv();
 				Number3d newNormal = face.hasn ? normals.get(face.n[j])
 						: new Number3d();
+				Material material = materialMap.get(face.materialKey);
+				
 				Color4 newColor = new Color4(255, 255, 0, 255);
+				if(material != null && material.diffuseColor != null)
+				{
+					newColor.r = material.diffuseColor.r;
+					newColor.g = material.diffuseColor.g;
+					newColor.b = material.diffuseColor.b;
+					newColor.a = material.diffuseColor.a;
+				}
 
-				if(hasBitmaps)
+				if(hasBitmaps && (ba != null))
 				{
 					newUv.u = ba.uOffset + newUv.u * ba.uScale;
 					newUv.v = ba.vOffset + ((newUv.v + 1) * ba.vScale) - 1;
@@ -104,7 +116,7 @@ public class ParseObjectData {
 		}
 
 		if (hasBitmaps) {
-			obj.textures().addById("atlas");
+			obj.textures().addById(textureAtlas.getId());
 		}
 
 		cleanup();

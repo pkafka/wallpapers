@@ -11,7 +11,6 @@ import min3d.Utils;
 import min3d.core.Object3d;
 import min3d.core.Scene;
 import min3d.objectPrimitives.Sphere;
-import min3d.vos.Color4Managed;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;

@@ -7,11 +7,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import min3d.Min3d;
+import min3d.Shared;
 import min3d.Utils;
 import min3d.animation.AnimationObject3d;
 import min3d.core.Object3dContainer;
+import min3d.vos.Color4;
 import min3d.vos.Number3d;
 import min3d.vos.Uv;
 import android.content.res.Resources;
@@ -38,6 +41,7 @@ public abstract class AParser implements IParser {
 	protected ArrayList<Uv> texCoords;
 	protected ArrayList<Number3d> normals;
 	protected boolean generateMipMap;
+	protected HashMap<String, Material> materialMap;
 	
 	public AParser()
 	{
@@ -47,6 +51,7 @@ public abstract class AParser implements IParser {
 		parseObjects = new ArrayList<ParseObjectData>();
 		textureAtlas = new TextureAtlas();
 		firstObject = true;
+		materialMap = new HashMap<String, Material>();
 	}
 	
 	public AParser(Resources resources, String resourceID, Boolean generateMipMap)
@@ -71,7 +76,6 @@ public abstract class AParser implements IParser {
 	/**
 	 * Override this in the concrete parser
 	 */
-	@Override
 	public Object3dContainer getParsedObject() {
 		return null;
 	}
@@ -79,7 +83,6 @@ public abstract class AParser implements IParser {
 	/**
 	 * Override this in the concrete parser if applicable 
 	 */
-	@Override
 	public AnimationObject3d getParsedAnimationObject() {
 		return null;
 	}
@@ -108,7 +111,6 @@ public abstract class AParser implements IParser {
 	/**
 	 * Override this in the concrete parser
 	 */
-	@Override
 	public void parse() {
 	}
 	
@@ -188,6 +190,7 @@ public abstract class AParser implements IParser {
 		public TextureAtlas() {
 			bitmaps = new ArrayList<BitmapAsset>();
 		}
+		private String atlasId;
 
 		/**
 		 * Adds a bitmap to the atlas
@@ -299,6 +302,8 @@ public abstract class AParser implements IParser {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
+			
+			setId(Shared.textureManager().getNewAtlasId());
 		}
 
 		/**
@@ -370,6 +375,24 @@ public abstract class AParser implements IParser {
 			vertices.clear();
 			texCoords.clear();
 			normals.clear();
+		}
+
+		public void setId(String newAtlasId) {
+			atlasId = newAtlasId;			
+		}
+
+		public String getId() {
+			return atlasId;
+		}
+	}
+	
+	protected class Material {
+		public String name;
+		public String diffuseTextureMap;
+		public Color4 diffuseColor;
+
+		public Material(String name) {
+			this.name = name;
 		}
 	}
 }

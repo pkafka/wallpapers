@@ -144,7 +144,6 @@ public class Light extends AbstractDirtyManaged implements IDirtyParent
 		isSpotlight.setDirtyFlag();
 	}
 	
-	@Override
 	public void onDirty()
 	{
 		setDirtyFlag();

@@ -24,7 +24,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		super($maxVerts, $maxFaces, $useUvs,$useNormals,$useVertexColors);
 	}
 	
-	@Override
 	public void addChild(Object3d $o)
 	{
 		_children.add($o);
@@ -33,7 +32,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		$o.scene(this.scene());
 	}
 	
-	@Override
 	public void addChildAt(Object3d $o, int $index) 
 	{
 		_children.add($index, $o);
@@ -42,7 +40,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		$o.scene(this.scene());
 	}
 
-	@Override
 	public boolean removeChild(Object3d $o)
 	{
 		boolean b = _children.remove($o);
@@ -54,7 +51,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		return b;
 	}
 	
-	@Override
 	public Object3d removeChildAt(int $index) 
 	{
 		Object3d o = _children.remove($index);
@@ -65,7 +61,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		return o;
 	}
 	
-	@Override
 	public Object3d getChildAt(int $index) 
 	{
 		return _children.get($index);
@@ -74,7 +69,6 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 	/**
 	 * TODO: Use better lookup 
 	 */
-	@Override
 	public Object3d getChildByName(String $name)
 	{
 		for (int i = 0; i < _children.size(); i++)
@@ -84,14 +78,12 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 		return null;
 	}
 
-	@Override
 	public int getChildIndexOf(Object3d $o) 
 	{
 		return _children.indexOf($o);		
 	}
 
 
-	@Override
 	public int numChildren() 
 	{
 		return _children.size();
