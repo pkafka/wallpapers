@@ -21,7 +21,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 
 public class Renderer implements GLSurfaceView.Renderer

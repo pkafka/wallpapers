@@ -7,7 +7,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import min3d.Shared;
-import min3d.Utils;
 import min3d.core.Object3dContainer;
 import min3d.core.Scene;
 import min3d.parser.IParser;
@@ -17,7 +16,6 @@ import min3d.vos.LightType;
 import min3d.vos.Number3d;
 import min3d.vos.TextureVo;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
 

@@ -2,7 +2,6 @@ package com.sadboy.wallpapers;
 
 import android.content.Context;
 import android.preference.DialogPreference;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;

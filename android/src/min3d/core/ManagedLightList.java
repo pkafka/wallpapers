@@ -3,9 +3,8 @@ package min3d.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.util.Log;
-
 import min3d.vos.Light;
+import android.util.Log;
 
 public class ManagedLightList 
 {

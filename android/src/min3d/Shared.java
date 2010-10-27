@@ -1,7 +1,7 @@
 package min3d;
 
-import min3d.core.TextureManager;
 import min3d.core.Renderer;
+import min3d.core.TextureManager;
 import android.content.Context;
 
 /**
