@@ -44,7 +44,9 @@ public class Picturesque extends GLWallpaperService {
 
     private class Min3dRenderer implements GLWallpaperService.Renderer,
     	SensorEventListener{
-    	
+
+        private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+        
     	min3d.core.Renderer _renderer;
     	public Scene _scene;
     	
@@ -57,6 +59,8 @@ public class Picturesque extends GLWallpaperService {
         float[] valuesAccel = new float[3];
         float[] valuesMag = new float[3];	
         float[] values = new float[3];
+		private float mPreviousX;
+		private float mPreviousY;
     	
         public Min3dRenderer(Context c) {
 
@@ -68,18 +72,31 @@ public class Picturesque extends GLWallpaperService {
             
             registerListeners();
         }
-
     	@Override
     	public void onTouchEvent(MotionEvent e) {
-         
+   
+          
+          float x = e.getX();
+          float y = e.getY();
+          
+          switch (e.getAction()) {
+          case MotionEvent.ACTION_MOVE:
+              float dx = x - mPreviousX;
+              float dy = y - mPreviousY;
+              _scene.camera().target.x += dx * TOUCH_SCALE_FACTOR ;
+              _scene.camera().target.y += dy * TOUCH_SCALE_FACTOR;
+          }
+          mPreviousX = x;
+          mPreviousY = y;
     	}
 
         public void onDrawFrame(GL10 gl) {
 
-        	//if (_rotationMatrix != null){
-    	    //	_renderer.gl().glLoadMatrixf(_rotationMatrix, 0);
-    	    //}
-        	
+        	/*
+        	if (_rotationMatrix != null){
+    	    	_renderer.gl().glLoadMatrixf(_rotationMatrix, 0);
+    	    }
+        	*/
         	_renderer.onDrawFrame(gl);
         }
         
@@ -122,12 +139,12 @@ public class Picturesque extends GLWallpaperService {
         	 */
         	SkyBox skyBox = new SkyBox(10, 2);
 
-        	skyBox.addTexture(SkyBox.Face.North, R.drawable.earth, "mynorthtexture");
-        	skyBox.addTexture(SkyBox.Face.East,  R.drawable.earth,  "myeasttexture");
-        	skyBox.addTexture(SkyBox.Face.South, R.drawable.earth, "mysouthtexture");
-        	skyBox.addTexture(SkyBox.Face.West,  R.drawable.earth,  "mywesttexture");
-        	skyBox.addTexture(SkyBox.Face.Up,    R.drawable.earth,    "myuptexture");
-        	skyBox.addTexture(SkyBox.Face.Down,  R.drawable.earth,  "mydowntexture");
+        	skyBox.addTexture(SkyBox.Face.North, R.drawable.skybox_forward, "mynorthtexture");
+        	skyBox.addTexture(SkyBox.Face.East,  R.drawable.skybox_left,  "myeasttexture");
+        	skyBox.addTexture(SkyBox.Face.South, R.drawable.skybox_back, "mysouthtexture");
+        	skyBox.addTexture(SkyBox.Face.West,  R.drawable.skybox_right,  "mywesttexture");
+        	skyBox.addTexture(SkyBox.Face.Up,    R.drawable.skybox_up,    "myuptexture");
+        	skyBox.addTexture(SkyBox.Face.Down,  R.drawable.skybox_down,  "mydowntexture");
 
         	_scene.addChild(skyBox);
         }
