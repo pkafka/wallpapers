@@ -82,7 +82,7 @@ public class Balls extends GLWallpaperService {
     		Shared.context(getApplicationContext());
     		
     		_scene = new Scene();
-    		_renderer = new min3d.core.Renderer(_scene);
+    		_renderer = new min3d.core.Renderer(_scene, null);
     		Shared.renderer(_renderer);
     		
             _sensor = new SensorListener(c);
@@ -105,6 +105,8 @@ public class Balls extends GLWallpaperService {
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
     	        		//TODO: make pressure equal to distance from touch
+    	        		
+    	        		
     	        		
     	        		obj.velocity().z = -(e.getPressure() * 100);
     	        		obj.velocity().z = -(e.getPressure() * 100);

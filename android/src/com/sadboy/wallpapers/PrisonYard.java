@@ -74,7 +74,7 @@ public class PrisonYard extends GLWallpaperService {
         public Min3dRenderer(Context c) {
     		Shared.context(getApplicationContext());
     		_scene = new Scene();
-    		_renderer = new min3d.core.Renderer(_scene);
+    		_renderer = new min3d.core.Renderer(_scene, null);
     		Shared.renderer(_renderer);
             _lastDraw = System.currentTimeMillis();
         }

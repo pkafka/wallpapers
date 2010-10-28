@@ -19,9 +19,6 @@ import android.view.MotionEvent;
 
 public class Picturesque extends GLWallpaperService {
 
-	
-
-    private float[] _rotationMatrix;
     
     @Override
     public void onCreate() {
@@ -67,14 +64,13 @@ public class Picturesque extends GLWallpaperService {
     		Shared.context(getApplicationContext());
     		
     		_scene = new Scene();
-    		_renderer = new min3d.core.Renderer(_scene);
+    		_renderer = new min3d.core.Renderer(_scene, null);
     		Shared.renderer(_renderer);
             
             registerListeners();
         }
     	@Override
     	public void onTouchEvent(MotionEvent e) {
-   
           
           float x = e.getX();
           float y = e.getY();
@@ -83,20 +79,15 @@ public class Picturesque extends GLWallpaperService {
           case MotionEvent.ACTION_MOVE:
               float dx = x - mPreviousX;
               float dy = y - mPreviousY;
-              _scene.camera().target.x += dx * TOUCH_SCALE_FACTOR ;
-              _scene.camera().target.y += dy * TOUCH_SCALE_FACTOR;
+              _renderer.mAngleX += dx * TOUCH_SCALE_FACTOR ;
+              _renderer.mAngleY += dy * TOUCH_SCALE_FACTOR;
           }
           mPreviousX = x;
           mPreviousY = y;
+          
     	}
 
         public void onDrawFrame(GL10 gl) {
-
-        	/*
-        	if (_rotationMatrix != null){
-    	    	_renderer.gl().glLoadMatrixf(_rotationMatrix, 0);
-    	    }
-        	*/
         	_renderer.onDrawFrame(gl);
         }
         
@@ -118,7 +109,7 @@ public class Picturesque extends GLWallpaperService {
     	
     	 public void remapAndSetMatrix(){
     	    	SensorManager.getOrientation(Rf, values);
-    	    	_rotationMatrix = Rf.clone();
+    	    	_renderer.matrix(Rf.clone());
     	    }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -137,14 +128,14 @@ public class Picturesque extends GLWallpaperService {
         	 * the second parameter specifies the quality (the number of
         	 * segments in each plane)
         	 */
-        	SkyBox skyBox = new SkyBox(10, 2);
+        	SkyBox skyBox = new SkyBox(50, 10);
 
-        	skyBox.addTexture(SkyBox.Face.North, R.drawable.skybox_forward, "mynorthtexture");
-        	skyBox.addTexture(SkyBox.Face.East,  R.drawable.skybox_left,  "myeasttexture");
-        	skyBox.addTexture(SkyBox.Face.South, R.drawable.skybox_back, "mysouthtexture");
-        	skyBox.addTexture(SkyBox.Face.West,  R.drawable.skybox_right,  "mywesttexture");
-        	skyBox.addTexture(SkyBox.Face.Up,    R.drawable.skybox_up,    "myuptexture");
-        	skyBox.addTexture(SkyBox.Face.Down,  R.drawable.skybox_down,  "mydowntexture");
+        	skyBox.addTexture(SkyBox.Face.North, R.drawable.skbx_north, "mynorthtexture");
+        	skyBox.addTexture(SkyBox.Face.East,  R.drawable.skbx_east,  "myeasttexture");
+        	skyBox.addTexture(SkyBox.Face.South, R.drawable.skbx_south, "mysouthtexture");
+        	skyBox.addTexture(SkyBox.Face.West,  R.drawable.skbx_west,  "mywesttexture");
+        	skyBox.addTexture(SkyBox.Face.Up,    R.drawable.skbx_up,    "myuptexture");
+        	skyBox.addTexture(SkyBox.Face.Down,  R.drawable.skbx_down,  "mydowntexture");
 
         	_scene.addChild(skyBox);
         }

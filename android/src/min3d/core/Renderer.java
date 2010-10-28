@@ -12,11 +12,13 @@ import min3d.Shared;
 import min3d.animation.AnimationObject3d;
 import min3d.vos.FrustumManaged;
 import min3d.vos.Light;
+import min3d.vos.Number3d;
 import min3d.vos.RenderType;
 import min3d.vos.TextureVo;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -46,10 +48,16 @@ public class Renderer implements GLSurfaceView.Renderer
 	private long _timeLastSample;
 	private ActivityManager _activityManager;
 	private ActivityManager.MemoryInfo _memoryInfo;
+	
+	private float[] _matrix;
+
+	public float mAngleX;
+	public float mAngleY;
 
 
-	public Renderer(Scene $scene)
+	public Renderer(Scene $scene, float[] matrix)
 	{
+		_matrix = matrix;
 		_scene = $scene;
 
 		_scratchIntBuffer = IntBuffer.allocate(4);
@@ -101,6 +109,16 @@ public class Renderer implements GLSurfaceView.Renderer
 		if (_logFps) doFps();
 	}
 	
+	public void matrix(float[] matrix)
+	{
+		_matrix = matrix;
+	}
+	
+	public float[] matrix()
+	{
+		return _matrix;
+	}
+	
 	//
 	
 	/**
@@ -139,12 +157,20 @@ public class Renderer implements GLSurfaceView.Renderer
 		// Camera 
 		
 		_gl.glMatrixMode(GL10.GL_MODELVIEW);
-		_gl.glLoadIdentity();
-
-		GLU.gluLookAt(_gl, 
+		
+		if (_matrix != null){
+			_gl.glLoadMatrixf(_matrix, 0);
+	    	_gl.glRotatef(mAngleX, 1, 0, 0);
+	    	_gl.glRotatef(mAngleY, 0, 1, 0);
+		}
+		else{
+			_gl.glLoadIdentity();
+			GLU.gluLookAt(_gl, 
 			_scene.camera().position.x,_scene.camera().position.y,_scene.camera().position.z,
 			_scene.camera().target.x,_scene.camera().target.y,_scene.camera().target.z,
 			_scene.camera().upAxis.x,_scene.camera().upAxis.y,_scene.camera().upAxis.z);
+		}
+		
 		
 		// Background color
 		

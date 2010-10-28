@@ -53,7 +53,7 @@ public class RendererActivity extends Activity implements ISceneController
 		//
 		Shared.context(this);
 		scene = new Scene(this);
-		Renderer r = new Renderer(scene);
+		Renderer r = new Renderer(scene, null);
 		Shared.renderer(r);
 		
 		_glSurfaceView = new GLSurfaceView(this);
