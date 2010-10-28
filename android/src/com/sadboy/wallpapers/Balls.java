@@ -107,7 +107,6 @@ public class Balls extends GLWallpaperService {
     	        		//TODO: make pressure equal to distance from touch
     	        		
     	        		
-    	        		
     	        		obj.velocity().z = -(e.getPressure() * 100);
     	        		obj.velocity().z = -(e.getPressure() * 100);
     	        	}
@@ -127,7 +126,7 @@ public class Balls extends GLWallpaperService {
     	}
 
         public void onDrawFrame(GL10 gl) {
-
+        	
         	double time = System.currentTimeMillis();
         	double elapsed = time - _lastDraw;
         	_lastDraw = time;
@@ -157,11 +156,6 @@ public class Balls extends GLWallpaperService {
         		Number3d accel, 
         		float roll, 
         		float pitch){
-        	
-        	//if (obj == _room)
-        		//return;
-        	
-        	//obj.velocity().add(accel);
         	
             if (obj.position().z > 2){
             	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;

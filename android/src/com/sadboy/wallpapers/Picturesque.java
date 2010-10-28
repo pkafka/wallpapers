@@ -1,8 +1,6 @@
 
 package com.sadboy.wallpapers;
 
-import java.util.List;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -15,6 +13,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.view.MotionEvent;
+
+import com.sadboy.wallpapers.physics.SensorListener;
 
 
 public class Picturesque extends GLWallpaperService {
@@ -39,35 +39,29 @@ public class Picturesque extends GLWallpaperService {
 		return engine;
     }
 
-    private class Min3dRenderer implements GLWallpaperService.Renderer,
-    	SensorEventListener{
+    private class Min3dRenderer implements GLWallpaperService.Renderer
+    	{
 
         private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
         
     	min3d.core.Renderer _renderer;
     	public Scene _scene;
     	
-    	private SensorManager _sensor;
+    	private SensorListener _sensor;
         
-    	final int matrix_size = 16;
-        float[] Rf = new float[matrix_size];
-        float[] If = new float[matrix_size];   
-        float[] outR = new float[matrix_size];
-        float[] valuesAccel = new float[3];
-        float[] valuesMag = new float[3];	
-        float[] values = new float[3];
 		private float mPreviousX;
 		private float mPreviousY;
     	
         public Min3dRenderer(Context c) {
 
     		Shared.context(getApplicationContext());
+
+    		_sensor = new SensorListener(c);
     		
     		_scene = new Scene();
     		_renderer = new min3d.core.Renderer(_scene, null);
     		Shared.renderer(_renderer);
-            
-            registerListeners();
+    		
         }
     	@Override
     	public void onTouchEvent(MotionEvent e) {
@@ -84,33 +78,13 @@ public class Picturesque extends GLWallpaperService {
           }
           mPreviousX = x;
           mPreviousY = y;
-          
     	}
 
         public void onDrawFrame(GL10 gl) {
+        	if (_sensor.matrixIsDirty())
+        		_renderer.matrix(_sensor.matrix());
         	_renderer.onDrawFrame(gl);
         }
-        
-    	private void registerListeners(){
-    		_sensor = (SensorManager) getSystemService(SENSOR_SERVICE);
-            List<Sensor> sl = _sensor.getSensorList(Sensor.TYPE_ALL);
-            
-            //TODO:only wire up needed sensors
-            for (int i = 0; i < sl.size(); i++) {
-            	if (sl.get(i).getType() == Sensor.TYPE_ORIENTATION ||
-            			sl.get(i).getType() == Sensor.TYPE_MAGNETIC_FIELD ||
-            			sl.get(i).getType() == Sensor.TYPE_ACCELEROMETER){
-    	        	_sensor.registerListener(Min3dRenderer.this,
-    	                    sl.get(i),
-    	                    SensorManager.SENSOR_DELAY_GAME);
-            	}
-    		}
-    	}
-    	
-    	 public void remapAndSetMatrix(){
-    	    	SensorManager.getOrientation(Rf, values);
-    	    	_renderer.matrix(Rf.clone());
-    	    }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
         	_renderer.onSurfaceChanged(gl, width, height);
@@ -139,31 +113,6 @@ public class Picturesque extends GLWallpaperService {
 
         	_scene.addChild(skyBox);
         }
-
-		@Override
-		public void onAccuracyChanged(Sensor arg0, int arg1) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			Sensor s = event.sensor;
-			
-			switch (s.getType()) {
-	        case Sensor.TYPE_MAGNETIC_FIELD:
-	        	valuesMag = event.values.clone();
-	            break;
-	        case Sensor.TYPE_ACCELEROMETER:
-	        	valuesAccel = event.values.clone();
-	        	break;
-	        case Sensor.TYPE_ORIENTATION:
-	        	if (SensorManager.getRotationMatrix(Rf, If, valuesAccel, valuesMag)){
-	        		remapAndSetMatrix();
-	 			}
-	        	break;
-			}
-		}
         
        
     }
