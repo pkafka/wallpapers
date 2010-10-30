@@ -4,6 +4,7 @@ import min3d.Shared;
 import min3d.Utils;
 import min3d.core.Object3dContainer;
 import min3d.vos.Color4;
+import min3d.vos.TextureVo;
 import android.graphics.Bitmap;
 
 public class SkyBox extends Object3dContainer {
@@ -78,12 +79,20 @@ public class SkyBox extends Object3dContainer {
                 addChild(up);
                 addChild(down);
         }
+
         
         public void addTexture(Face face, int resourceId, String id) {
                 Bitmap bitmap = Utils.makeBitmapFromResourceId(resourceId);
                 Shared.textureManager().addTextureId(bitmap, id, false);
                 bitmap.recycle();
                 addTexture(face, bitmap, id);
+        }
+        
+        public TextureVo addSingleTexture(Face face, int resourceId, String id) {
+            Bitmap bitmap = Utils.makeBitmapFromResourceId(resourceId);
+            Shared.textureManager().addTextureId(bitmap, id, false);
+            bitmap.recycle();
+            return faces[face.ordinal()].textures().addById(id);
         }
         
         public void addTexture(Face face, Bitmap bitmap, String id) {

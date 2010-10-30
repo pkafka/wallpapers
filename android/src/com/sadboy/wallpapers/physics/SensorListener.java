@@ -1,5 +1,6 @@
 package com.sadboy.wallpapers.physics;
 
+
 import java.util.List;
 
 import min3d.core.Object3d;
@@ -39,20 +40,7 @@ When the device lies flat on a table and is pushed toward the sky with an accele
 	private SensorManager mSensor;
 	private Context _context;
 	
-	float[] _orientation;
-	
-	final int matrix_size = 16;
-    float[] Rf = new float[matrix_size];
-    float[] If = new float[matrix_size];   
-    float[] outR = new float[matrix_size];
-    float[] valuesAccel = new float[3];
-    float[] valuesMag = new float[3];	
-    float[] values = new float[3];
-	private float mPreviousX;
-	private float mPreviousY;
-	
-	float[] _matrix;
-	boolean _dirtyMatrix;
+	float[] _orientation, _accelerometer;
 	
 	public SensorListener(Context c){
 		_context = c;
@@ -66,21 +54,10 @@ When the device lies flat on a table and is pushed toward the sky with an accele
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		Sensor s = event.sensor;
-		switch (s.getType()) {
-        case Sensor.TYPE_MAGNETIC_FIELD:
-        	valuesMag = event.values.clone();
-            break;
-        case Sensor.TYPE_ACCELEROMETER:
-        	valuesAccel = event.values.clone();
-        	break;
-        case Sensor.TYPE_ORIENTATION:
-        	_orientation = event.values;
-        	if (SensorManager.getRotationMatrix(Rf, If, valuesAccel, valuesMag)){
-        		remapAndSetMatrix();
- 			}
-        	break;
-		}
+		if (event.sensor.getType() == event.sensor.TYPE_ORIENTATION)
+			_orientation = event.values;
+		else if (event.sensor.getType() == event.sensor.TYPE_ACCELEROMETER)
+			_accelerometer = event.values;
 	}
 	
 	public float getAzimuth(){
@@ -100,29 +77,15 @@ When the device lies flat on a table and is pushed toward the sky with an accele
 	}
 	
 	public Number3d getAccelerometer(){
-		if (valuesAccel != null){
-			return new Number3d(((valuesAccel[0] * Object3d.TOUCH_SCALE_FACTOR) * .03f), 
-					((valuesAccel[1] * Object3d.TOUCH_SCALE_FACTOR) * .03f),
+		if (_accelerometer != null){
+			return new Number3d(((_accelerometer[0] * Object3d.TOUCH_SCALE_FACTOR) * .03f), 
+					((_accelerometer[1] * Object3d.TOUCH_SCALE_FACTOR) * .03f),
 					0);
 		}
 		else 
 			return null;
 	}
 	
-	 public void remapAndSetMatrix(){
-		 _dirtyMatrix = true;
-    	SensorManager.getOrientation(Rf, values);
-    	_matrix = Rf.clone();
-	 }
-	 
-	 public boolean matrixIsDirty(){
-		 return _dirtyMatrix;
-	 }
-	 
-	 public float[] matrix(){
-		 _dirtyMatrix = false;
-		 return _matrix;
-	 }
 
 	public void register(){
 		mSensor = (SensorManager) _context.getSystemService(
@@ -130,9 +93,12 @@ When the device lies flat on a table and is pushed toward the sky with an accele
         List<Sensor> sl = mSensor.getSensorList(Sensor.TYPE_ALL);
         
         for (int i = 0; i < sl.size(); i++) {
-        	if (sl.get(i).getType() == Sensor.TYPE_ORIENTATION ||
-        			sl.get(i).getType() == Sensor.TYPE_ACCELEROMETER ||
-        			sl.get(i).getType() == Sensor.TYPE_MAGNETIC_FIELD){
+        	if (sl.get(i).getType() == Sensor.TYPE_ORIENTATION){
+        		mSensor.registerListener(SensorListener.this,
+	                    sl.get(i),
+	                    SensorManager.SENSOR_DELAY_GAME);
+        	}
+        	else if (sl.get(i).getType() == Sensor.TYPE_ACCELEROMETER){
         		mSensor.registerListener(SensorListener.this,
 	                    sl.get(i),
 	                    SensorManager.SENSOR_DELAY_GAME);
