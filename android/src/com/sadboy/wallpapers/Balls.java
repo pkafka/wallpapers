@@ -228,12 +228,20 @@ public class Balls extends GLWallpaperService {
             	if (t != null)
             		s.textures().add(t);
             	
+            	if (_style == 0)
+            		s.renderType(RenderType.TRIANGLES);
             	if (_style == 1)
             		s.renderType(RenderType.POINTS);
             	else if (_style == 2)
             		s.renderType(RenderType.LINES);
-            	else
-            		s.renderType(RenderType.TRIANGLES);
+            	else if (_style == 3)
+            		s.renderType(RenderType.LINE_LOOP);
+            	else if (_style == 4)
+            		s.renderType(RenderType.LINE_STRIP);
+            	else if (_style == 5)
+            		s.renderType(RenderType.TRIANGLE_STRIP);
+            	else if (_style == 6)
+            		s.renderType(RenderType.TRIANGLE_FAN);
             	
             	s.position().x = r.nextFloat();
             	s.position().y = r.nextFloat();

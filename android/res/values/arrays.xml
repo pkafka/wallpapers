@@ -7,12 +7,20 @@
 		<item>Fill</item>
 		<item>Points</item>
 		<item>Lines</item>
+		<item>LINE_LOOP</item>
+		<item>LINE_STRIP</item>
+		<item>TRIANGLE_STRIP</item>
+		<item>TRIANGLE_FAN</item>
 	</string-array>
 	
 	<string-array name="entryvalues_style">
         <item>0</item>
         <item>1</item>
         <item>2</item>  
+        <item>3</item>  
+        <item>4</item>  
+        <item>5</item>  
+        <item>6</item>  
     </string-array>
     
     <string-array name="render_theme">

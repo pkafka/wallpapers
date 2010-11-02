@@ -9,8 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import min3d.Shared;
 import min3d.core.Object3dContainer;
 import min3d.core.Scene;
-import min3d.parser.IParser;
-import min3d.parser.Parser;
+import min3d.objectPrimitives.Rectangle;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
@@ -66,7 +65,6 @@ public class PrisonYard extends GLWallpaperService {
     	Light _lightRed;
     	Light _lightBlue;
     	Light _lightMain;
-     	Object3dContainer obj1;
      	int _count;
 
     	TextureVo _cloudTexture;
@@ -98,8 +96,6 @@ public class PrisonYard extends GLWallpaperService {
         
         public void onDrawFrame(GL10 gl) {
         	
-        	//_cloudTexture.offsetU += 0.001f;	
-        	
     		double time = System.currentTimeMillis();
         	double elapsed = time - _lastDraw;
         	_lastDraw = time;
@@ -124,6 +120,9 @@ public class PrisonYard extends GLWallpaperService {
     		
     		short mag = (short)(255 - (_count % 60) * (255/60));
     		_lightRed.diffuse.r(mag);
+    		
+    		rect.rotation().y +=1;
+    		rect.rotation().z += 0.2f;
         
         	_renderer.onDrawFrame(gl);
         }
@@ -178,17 +177,12 @@ public class PrisonYard extends GLWallpaperService {
     		_scene.lights().add(_lightBlue);
     		_lightBlue.isVisible(false);
     		*/
-            
-    		IParser parser = Parser.createParser(Parser.Type.OBJ,
-    				getResources(), "com.sadboy.wallpapers:raw/wall_obj", true);
-    		parser.parse();
 
-    		obj1 = parser.getParsedObject();
-    		obj1.scale().x = obj1.scale().y = obj1.scale().z = 2.7f;
-    		obj1.position().z += -15;
-    		_scene.addChild(obj1);
+    		rect = new Rectangle(10, 10, 10, 10);
+    		rect.position().z += -15;
+    		_scene.addChild(rect);
     	}
-        
+        Rectangle rect;
         Number3d wallDirection(Wall wall) {
         	switch (wall) {
         		case WALL_LEFT:
