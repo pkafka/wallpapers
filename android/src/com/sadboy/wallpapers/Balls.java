@@ -10,7 +10,9 @@ import min3d.Shared;
 import min3d.Utils;
 import min3d.core.Object3d;
 import min3d.core.Scene;
+import min3d.objectPrimitives.Rectangle;
 import min3d.objectPrimitives.Sphere;
+import min3d.vos.Color4;
 import min3d.vos.Light;
 import min3d.vos.LightType;
 import min3d.vos.Number3d;
@@ -186,6 +188,54 @@ public class Balls extends GLWallpaperService {
         	
     		_scene.lights().add( new Light() );
     		
+    		
+    		Bitmap b = Utils.makeBitmapFromResourceId(R.drawable.wood);
+    		Shared.textureManager().addTextureId(b, "wood", false);
+    		b.recycle();
+/*
+        	Color4 planeColor = new Color4(255, 255, 255, 255);
+    		Rectangle east = new Rectangle(40, 12, 2, 2, planeColor);
+    		Rectangle west = new Rectangle(40, 12, 2, 2, planeColor);
+    		Rectangle up = new Rectangle(40, 12, 2, 2, planeColor);
+    		Rectangle down = new Rectangle(40, 12, 2, 2, planeColor);
+       		
+    		east.position().x = -6;
+    		east.rotation().y = -90;
+    		east.position().z = -20;
+    		east.lightingEnabled(false);
+    		east.textures().addById("wood");
+    		
+    		west.position().x = 6;
+    		west.rotation().y = 90;
+    		west.position().z = -20;
+    		west.lightingEnabled(false);
+    		west.textures().addById("wood");
+    		
+    		up.rotation().x = -90;
+    		up.rotation().z = 90;
+    		up.position().y = 6;
+    		up.position().z = -20;
+    		up.lightingEnabled(false);
+    		up.textures().addById("wood");
+    		
+    		down.rotation().x = 90;
+    		down.rotation().z = 90;
+    		down.position().y = -6;
+    		down.position().z = -20;
+    		down.lightingEnabled(false);
+    		down.textures().addById("wood");
+
+    		_scene.addChild(east);
+    		_scene.addChild(west);
+    		_scene.addChild(up);
+    		_scene.addChild(down);
+       		
+    		_scene.fogColor(new Color4(0, 0, 0, 255) );
+    		_scene.fogNear(10);
+    		_scene.fogFar(40);
+    		_scene.fogEnabled(true);
+        	*/
+    		
         	if (_theme != 2){
         		//not rainbow
         	
@@ -203,7 +253,7 @@ public class Balls extends GLWallpaperService {
         	
         	TextureVo t = null;
         	if (_theme >= 3){
-        		Bitmap b = null;
+        		 b = null;
         		if (_theme == 3)
         			b = Utils.makeBitmapFromResourceId(Shared.context(), R.drawable.earth);
         		if (_theme == 4)
@@ -260,16 +310,7 @@ public class Balls extends GLWallpaperService {
         		
         		_scene.addChild(s);
             }
-    
-            /*
-    		IParser parser = Parser.createParser(Parser.Type.OBJ,
-    				getResources(), "com.sadboy.wallpapers:raw/room_obj", true);
-    		parser.parse();
-
-    		_room = parser.getParsedObject();
-    		_room.scale().x = _room.scale().y = _room.scale().z = 1.7f;
-    		_scene.addChild(_room);
-    		*/
+   
     	}
         
         Number3d wallDirection(Wall wall) {

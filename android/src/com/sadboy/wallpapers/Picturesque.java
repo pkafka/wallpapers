@@ -113,7 +113,6 @@ public class Picturesque extends GLWallpaperService {
         	 * segments in each plane)
         	 */
         	SkyBox skyBox = new SkyBox(50, 10);
-
         	skyBox.addTexture(SkyBox.Face.North, R.drawable.img_kids, "mynorthtexture");
         	skyBox.addTexture(SkyBox.Face.East,  R.drawable.skbx_east,  "myeasttexture");
         	skyBox.addTexture(SkyBox.Face.South, R.drawable.skbx_south, "mysouthtexture");
