@@ -376,8 +376,9 @@ public class Object3d
 	{
 		this.vertices().points().clear();
 		this.vertices().uvs().clear();
-		this.vertices().normals().clear();
-		this.vertices().colors().clear();
+		this.vertices().normals().clear();		
+		if(this.vertices().colors() != null)
+			this.vertices().colors().clear();
 		_textures.clear();
 		if (this.parent() != null) this.parent().removeChild(this);
 	}

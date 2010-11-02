@@ -3,6 +3,7 @@ package min3d.objectPrimitives;
 import min3d.Utils;
 import min3d.core.Object3dContainer;
 import min3d.vos.Number3d;
+import min3d.vos.Color4;
 
 
 /**
@@ -34,8 +35,37 @@ public class Sphere extends Object3dContainer
 
 	public Sphere(float $radius, int $columns, int $rows)
 	{
-		this($radius,$columns,$rows,true,true,true);
+		super(
+				($columns+1) * ($rows+1),
+				$columns * $rows * 2,
+				true,
+				true,
+				true
+			);
+
+			_cols = $columns;
+			_rows = $rows;
+			_radius = $radius;
+			
+			build();
 	} 
+	
+	public Sphere(float $radius, int $columns, int $rows, Color4 color)
+	{
+		super(
+				($columns+1) * ($rows+1),
+				$columns * $rows * 2,
+				true,
+				true,
+				true
+		);
+		defaultColor(color);
+		_cols = $columns;
+		_rows = $rows;
+		_radius = $radius;
+		
+		build();
+	}
 	
 	private void build()
 	{
@@ -45,6 +75,7 @@ public class Sphere extends Object3dContainer
 		Number3d pos = new Number3d();
 		Number3d posFull = new Number3d();
 
+		if( defaultColor() == null ) defaultColor(new Color4());
 		// Build vertices
 		
 		for (r = 0; r <= _rows; r++)

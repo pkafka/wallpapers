@@ -1,5 +1,7 @@
 package min3d.parser;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -299,8 +301,8 @@ public abstract class AParser implements IParser {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
-			
+			}
+			*/
 			setId(Shared.textureManager().getNewAtlasId());
 		}
 

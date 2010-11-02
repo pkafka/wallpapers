@@ -61,7 +61,7 @@ public class ExampleTextureOffset extends RendererActivity
 	@Override 
 	public void updateScene() 
 	{
-		//_earth.rotation().y += 1.0f;
+		_earth.rotation().y += 1.0f;
 		
 		// Animate texture offset
 		_cloudTexture.offsetU += 0.001f;		

@@ -28,7 +28,7 @@ public class Box extends Object3dContainer
 		_height = $height;
 		_depth = $depth;
 		
-		if (_cols != null)
+		if ($sixColor4s != null)
 		{
 			_cols = $sixColor4s;
 		}
@@ -49,6 +49,11 @@ public class Box extends Object3dContainer
 	public Box(float $width, float $height, float $depth, Color4[] $sixColor4s)
 	{
 		this($width,$height,$depth, $sixColor4s, true,true,true);
+	}
+	
+	public Box(float $width, float $height, float $depth, Color4 color)
+	{
+		this($width,$height,$depth, new Color4[] { color, color, color, color, color, color }, true,true,true);
 	}
 
 	public Box(float $width, float $height, float $depth)

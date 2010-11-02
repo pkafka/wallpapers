@@ -174,7 +174,7 @@ public class Renderer implements GLSurfaceView.Renderer
 		
 		// Background color
 		
-		if (_scene.backgroundColor().isDirty())
+		if (_scene.backgroundColor().isDirty() && _scene.backgroundTransparent() == false)
 		{
 			_gl.glClearColor( 
 				(float)_scene.backgroundColor().r() / 255f, 
@@ -291,6 +291,16 @@ public class Renderer implements GLSurfaceView.Renderer
 
 	protected void drawScene()
 	{
+		if(_scene.fogEnabled() == true) {
+			_gl.glFogf(GL10.GL_FOG_MODE, _scene.fogType().glValue());
+			_gl.glFogf(GL10.GL_FOG_START, _scene.fogNear());
+			_gl.glFogf(GL10.GL_FOG_END, _scene.fogFar());
+			_gl.glFogfv(GL10.GL_FOG_COLOR, _scene.fogColor().toFloatBuffer() );
+			_gl.glEnable(GL10.GL_FOG);
+		} else {
+			_gl.glDisable(GL10.GL_FOG);
+		}
+
 		for (int i = 0; i < _scene.children().size(); i++)
 		{
 			Object3d o = _scene.children().get(i);
@@ -299,7 +309,7 @@ public class Renderer implements GLSurfaceView.Renderer
 				((AnimationObject3d)o).update();
 			}
 			drawObject(o);
-		}
+		}		
 	}
 	
 	//boolean customResult = o.customRenderer(_gl); 
