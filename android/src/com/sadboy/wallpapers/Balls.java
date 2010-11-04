@@ -78,6 +78,12 @@ public class Balls extends GLWallpaperService {
 		private float mPreviousX;
 		private float mPreviousY;
 		private int _theme;
+		
+		Rectangle _east;
+		Rectangle _west;
+		Rectangle _up;
+		Rectangle _down;
+		private int _wallTexture;
     	
         public Min3dRenderer(Context c) {
 
@@ -95,92 +101,6 @@ public class Balls extends GLWallpaperService {
         	onSharedPreferenceChanged(_prefs, null);
             loadPrefs();
         }
-
-    	@Override
-    	public void onTouchEvent(MotionEvent e) {
-            float x = e.getX();
-            float y = e.getY();
-            switch (e.getAction()) {
-    	        case MotionEvent.ACTION_UP:   
-    	        	x = x * .001f;
-    	        	y = y * .001f;
-    	        	for (int i = 0; i < _scene.numChildren(); i++){
-    	        		Object3d obj = _scene.getChildAt(i);
-    	        		//TODO: make pressure equal to distance from touch
-    	        		
-    	        		
-    	        		obj.velocity().z = -(e.getPressure() * 100);
-    	        		obj.velocity().z = -(e.getPressure() * 100);
-    	        	}
-    	        	break;
-    	        case MotionEvent.ACTION_MOVE:
-    	        	float dx = x - mPreviousX;
-    	            float dy = y - mPreviousY;
-    	        	for (int i = 0; i < _scene.numChildren(); i++){
-    	        		Object3d obj = _scene.getChildAt(i);
-	        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
-	        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
-    	        	}
-    	        	break;
-            }
-	        mPreviousX = x;
-	        mPreviousY = y;
-    	}
-
-        public void onDrawFrame(GL10 gl) {
-        	
-        	double time = System.currentTimeMillis();
-        	double elapsed = time - _lastDraw;
-        	_lastDraw = time;
-        	
-        	if (elapsed > 1000)
-        		elapsed = 60;
-        	
-        	elapsed = elapsed / 1000;
-        	
-        	float pitch = _sensor.getPitch();
-    		float roll = _sensor.getRoll();
-        	
-        	for (int i = 0; i < _scene.numChildren(); i++){
-        		updateObject(
-        				_scene.getChildAt(i), 
-        				elapsed, 
-        				_sensor.getAccelerometer(),
-        				roll,
-        				pitch);
-        	}
-    		
-        	_renderer.onDrawFrame(gl);
-        }
-        
-        public void updateObject(Object3d obj, 
-        		double elapsed, 
-        		Number3d accel, 
-        		float roll, 
-        		float pitch){
-        	
-            if (obj.position().z > 2){
-            	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
-    			obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
-    			
-    			obj.rotation().x += (pitch * Object3d.TOUCH_SCALE_FACTOR) * .05;
-    			obj.rotation().y -= (roll * Object3d.TOUCH_SCALE_FACTOR) * .05;
-            }
-            
-        	obj.updateLocationAndVelocity(elapsed);
-    		
-        	checkWallCollisions(obj, elapsed);
-        	//handleBallBallCollisions();
-        }
-
-        public void onSurfaceChanged(GL10 gl, int width, int height) {
-        	_renderer.onSurfaceChanged(gl, width, height);
-        }
-
-        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        	_renderer.onSurfaceCreated(gl, config);
-    		initScene();
-        }
         
         public void initScene() 
         {
@@ -188,53 +108,74 @@ public class Balls extends GLWallpaperService {
         	
     		_scene.lights().add( new Light() );
     		
-    		
-    		Bitmap b = Utils.makeBitmapFromResourceId(R.drawable.wood);
-    		Shared.textureManager().addTextureId(b, "wood", false);
-    		b.recycle();
-/*
-        	Color4 planeColor = new Color4(255, 255, 255, 255);
-    		Rectangle east = new Rectangle(40, 12, 2, 2, planeColor);
-    		Rectangle west = new Rectangle(40, 12, 2, 2, planeColor);
-    		Rectangle up = new Rectangle(40, 12, 2, 2, planeColor);
-    		Rectangle down = new Rectangle(40, 12, 2, 2, planeColor);
-       		
-    		east.position().x = -6;
-    		east.rotation().y = -90;
-    		east.position().z = -20;
-    		east.lightingEnabled(false);
-    		east.textures().addById("wood");
-    		
-    		west.position().x = 6;
-    		west.rotation().y = 90;
-    		west.position().z = -20;
-    		west.lightingEnabled(false);
-    		west.textures().addById("wood");
-    		
-    		up.rotation().x = -90;
-    		up.rotation().z = 90;
-    		up.position().y = 6;
-    		up.position().z = -20;
-    		up.lightingEnabled(false);
-    		up.textures().addById("wood");
-    		
-    		down.rotation().x = 90;
-    		down.rotation().z = 90;
-    		down.position().y = -6;
-    		down.position().z = -20;
-    		down.lightingEnabled(false);
-    		down.textures().addById("wood");
+    		Bitmap b = null;
+    		switch (_wallTexture) {
+			case 1:
+				b = Utils.makeBitmapFromResourceId(R.drawable.wood);
+				break;
+			case 2:
+				b = Utils.makeBitmapFromResourceId(R.drawable.checkerboard);
+				break;
+			case 3:
+				b = Utils.makeBitmapFromResourceId(R.drawable.gray_waves);
+				break;
+			case 4:
+				b = Utils.makeBitmapFromResourceId(R.drawable.denim);
+				break;
+			case 5:
+				b = Utils.makeBitmapFromResourceId(R.drawable.google);
+				break;
+			case 6:
+				b = Utils.makeBitmapFromResourceId(R.drawable.checkerboard);
+				break;
+			}
+    		if (b != null){
+    			Shared.textureManager().addTextureId(b, "wall", false);
+    			b.recycle();
+    			
+    			Color4 planeColor = new Color4(255, 255, 255, 255);
+        		_east = new Rectangle(40, 12, 2, 2, planeColor);
+        		_west = new Rectangle(40, 12, 2, 2, planeColor);
+        		_up = new Rectangle(40, 12, 2, 2, planeColor);
+        		_down = new Rectangle(40, 12, 2, 2, planeColor);
+           		
+        		_east.position().x = -6;
+        		_east.rotation().y = -90;
+        		_east.position().z = -20;
+        		_east.lightingEnabled(false);
+        		_east.textures().addById("wall");
+        		
+        		_west.position().x = 6;
+        		_west.rotation().y = 90;
+        		_west.position().z = -20;
+        		_west.lightingEnabled(false);
+        		_west.textures().addById("wall");
+        		
+        		_up.rotation().x = -90;
+        		_up.rotation().z = 90;
+        		_up.position().y = 6;
+        		_up.position().z = -20;
+        		_up.lightingEnabled(false);
+        		_up.textures().addById("wall");
+        		
+        		_down.rotation().x = 90;
+        		_down.rotation().z = 90;
+        		_down.position().y = -6;
+        		_down.position().z = -20;
+        		_down.lightingEnabled(false);
+        		_down.textures().addById("wall");
 
-    		_scene.addChild(east);
-    		_scene.addChild(west);
-    		_scene.addChild(up);
-    		_scene.addChild(down);
-       		
+        		_scene.addChild(_east);
+        		_scene.addChild(_west);
+        		_scene.addChild(_up);
+        		_scene.addChild(_down);
+    		}
+
     		_scene.fogColor(new Color4(0, 0, 0, 255) );
     		_scene.fogNear(10);
     		_scene.fogFar(40);
     		_scene.fogEnabled(true);
-        	*/
+        	
     		
         	if (_theme != 2){
         		//not rainbow
@@ -313,6 +254,100 @@ public class Balls extends GLWallpaperService {
    
     	}
         
+
+    	@Override
+    	public void onTouchEvent(MotionEvent e) {
+            float x = e.getX();
+            float y = e.getY();
+            switch (e.getAction()) {
+    	        case MotionEvent.ACTION_UP:   
+    	        	x = x * .001f;
+    	        	y = y * .001f;
+    	        	for (int i = 0; i < _scene.numChildren(); i++){
+    	        		Object3d obj = _scene.getChildAt(i);
+    	        		//TODO: make pressure equal to distance from touch
+    	        		
+    	        		
+    	        		obj.velocity().z = -(e.getPressure() * 100);
+    	        		obj.velocity().z = -(e.getPressure() * 100);
+    	        	}
+    	        	break;
+    	        case MotionEvent.ACTION_MOVE:
+    	        	float dx = x - mPreviousX;
+    	            float dy = y - mPreviousY;
+    	        	for (int i = 0; i < _scene.numChildren(); i++){
+    	        		Object3d obj = _scene.getChildAt(i);
+	        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
+	        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
+    	        	}
+    	        	break;
+            }
+	        mPreviousX = x;
+	        mPreviousY = y;
+    	}
+
+        public void onDrawFrame(GL10 gl) {
+        	
+        	double time = System.currentTimeMillis();
+        	double elapsed = time - _lastDraw;
+        	_lastDraw = time;
+        	
+        	if (elapsed > 1000)
+        		elapsed = 60;
+        	
+        	elapsed = elapsed / 1000;
+        	
+        	float pitch = _sensor.getPitch();
+    		float roll = _sensor.getRoll();
+        	
+        	for (int i = 0; i < _scene.numChildren(); i++){
+        		Object3d obj = _scene.getChildAt(i);
+        		if (obj != _down && 
+        				obj != _up &&
+        				obj != _east &&
+        				obj != _west){
+        		updateObject(
+        				obj, 
+        				elapsed, 
+        				_sensor.getAccelerometer(),
+        				roll,
+        				pitch);
+        		}
+        	}
+    		
+        	_renderer.onDrawFrame(gl);
+        }
+        
+        public void updateObject(Object3d obj, 
+        		double elapsed, 
+        		Number3d accel, 
+        		float roll, 
+        		float pitch){
+        	
+            if (obj.position().z > 2){
+            	obj.velocity().y += (pitch * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    			obj.velocity().x -= (roll * Object3d.TOUCH_SCALE_FACTOR) * 0.003;
+    			
+    			obj.rotation().x += (pitch * Object3d.TOUCH_SCALE_FACTOR) * .05;
+    			obj.rotation().y -= (roll * Object3d.TOUCH_SCALE_FACTOR) * .05;
+            }
+            
+        	obj.updateLocationAndVelocity(elapsed);
+    		
+        	checkWallCollisions(obj, elapsed);
+        	//handleBallBallCollisions();
+        }
+
+        public void onSurfaceChanged(GL10 gl, int width, int height) {
+        	_renderer.onSurfaceChanged(gl, width, height);
+        }
+
+        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        	_renderer.onSurfaceCreated(gl, config);
+    		initScene();
+        }
+        
+       
         Number3d wallDirection(Wall wall) {
         	switch (wall) {
         		case WALL_LEFT:
@@ -446,6 +481,10 @@ public class Balls extends GLWallpaperService {
              catch(Exception ex){ _style = 0;}
              try{
             	 _theme = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_THEME, "0"));
+             }
+             catch(Exception ex){ _style = 0;}
+             try{
+            	 _wallTexture = Integer.parseInt(_prefs.getString(BallsSettings.SHARED_PREFS_WALLS, "0"));
              }
              catch(Exception ex){ _style = 0;}
          }

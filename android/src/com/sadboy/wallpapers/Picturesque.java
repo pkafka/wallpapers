@@ -112,6 +112,7 @@ public class Picturesque extends GLWallpaperService {
         	 * the second parameter specifies the quality (the number of
         	 * segments in each plane)
         	 */
+        	/*
         	SkyBox skyBox = new SkyBox(50, 10);
         	skyBox.addTexture(SkyBox.Face.North, R.drawable.img_kids, "mynorthtexture");
         	skyBox.addTexture(SkyBox.Face.East,  R.drawable.skbx_east,  "myeasttexture");
@@ -129,6 +130,7 @@ public class Picturesque extends GLWallpaperService {
     		_cloudTexture.repeatU = true; // .. this is the default, but just to be explicit
         	
         	_scene.addChild(skyBox);
+        	*/
         }
         
        

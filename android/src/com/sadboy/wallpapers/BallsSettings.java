@@ -22,6 +22,7 @@ public class BallsSettings  extends PreferenceActivity
 	protected static final String SHARED_PREFS_SIZE = "BALLS_SIZE";
 	protected static final String SHARED_PREFS_STYLE = "BALLS_STYLE";
 	protected static final String SHARED_PREFS_THEME = "BALLS_THEME";
+	protected static final String SHARED_PREFS_WALLS = "WALLS_THEME";
 
 	@Override
     protected void onCreate(Bundle icicle) {
@@ -41,7 +42,7 @@ public class BallsSettings  extends PreferenceActivity
     	// List preference
         ListPreference listPref = new ListPreference(this);
         listPref.setEntries(R.array.render_style);
-        listPref.setEntryValues(R.array.entryvalues_style);
+        listPref.setEntryValues(R.array.values);
         listPref.setDialogTitle("Style");
         listPref.setKey(SHARED_PREFS_STYLE);
         listPref.setTitle("Render Style");
@@ -73,13 +74,21 @@ public class BallsSettings  extends PreferenceActivity
 	    
 	    ListPreference theme = new ListPreference(this);
 	    theme.setEntries(R.array.render_theme);
-	    theme.setEntryValues(R.array.entryvalues_theme);
+	    theme.setEntryValues(R.array.values);
 	    theme.setDialogTitle("Theme");
 	    theme.setKey(SHARED_PREFS_THEME);
 	    theme.setTitle("Color Theme");
 	    theme.setSummary("Preset color theme (overrides ball color)");
         cat.addPreference(theme);
-	    
+        
+        ListPreference wall = new ListPreference(this);
+        wall.setEntries(R.array.wall_textures);
+        wall.setEntryValues(R.array.values);
+        wall.setDialogTitle("Walls");
+        wall.setKey(SHARED_PREFS_WALLS);
+        wall.setTitle("Wall Texture");
+        wall.setSummary("Sets or removes the walls");
+        cat.addPreference(wall);
 	    
 	    Preference paintColor = new Preference(this);
 	    paintColor.setKey(SHARED_PREFS_BALL_COLOR);

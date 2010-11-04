@@ -37,16 +37,21 @@ public class Scene implements IObject3dContainer, IDirtyParent
 	{
 		_sceneController = $sceneController;
 		_lights = new ManagedLightList();
-		_fogColor = new Color4(255, 255, 255, 255);
-		_fogNear = 0;
-		_fogFar = 10;
-		_fogType = FogType.LINEAR;
-		_fogEnabled = false;
+		initFog();
 	}
 	
 	public Scene() 
 	{
 		_lights = new ManagedLightList();
+		initFog();
+	}
+	
+	void initFog(){
+		_fogColor = new Color4(255, 255, 255, 255);
+		_fogNear = 0;
+		_fogFar = 10;
+		_fogType = FogType.LINEAR;
+		_fogEnabled = false;
 	}
 
 	/**

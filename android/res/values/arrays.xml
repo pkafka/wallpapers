@@ -7,21 +7,7 @@
 		<item>Fill</item>
 		<item>Points</item>
 		<item>Lines</item>
-		<item>LINE_LOOP</item>
-		<item>LINE_STRIP</item>
-		<item>TRIANGLE_STRIP</item>
-		<item>TRIANGLE_FAN</item>
 	</string-array>
-	
-	<string-array name="entryvalues_style">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>  
-        <item>3</item>  
-        <item>4</item>  
-        <item>5</item>  
-        <item>6</item>  
-    </string-array>
     
     <string-array name="render_theme">
     	<item>None</item>
@@ -33,23 +19,19 @@
 		<item>Android</item>
 		<item>Checkerboard</item>
 	</string-array>
-		<string-array name="entryvalues_theme">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>  
-        <item>3</item>  
-        <item>4</item>  
-        <item>5</item>  
-        <item>6</item>  
-        <item>7</item>  
-    </string-array>
-    
     
         <string-array name="wall_textures">
     	<item>None</item>
 		<item>Wood</item>
+		<item>Checkerboard</item>
+		<item>Cave</item>
+		<item>Denim</item>
+		<item>5</item>
+		<item>6</item>
 	</string-array>
-		<string-array name="wall_texture_values">
+	
+	
+		<string-array name="values">
         <item>0</item>
         <item>1</item>
         <item>2</item>  
@@ -58,6 +40,14 @@
         <item>5</item>  
         <item>6</item>  
         <item>7</item>  
+        <item>8</item>  
+        <item>9</item>  
+        <item>10</item>  
+        <item>11</item>  
+        <item>12</item>  
+        <item>13</item>  
+        <item>14</item>  
+        <item>15</item>  
     </string-array>
 
 </resources>
