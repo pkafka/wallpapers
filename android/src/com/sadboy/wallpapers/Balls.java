@@ -123,7 +123,7 @@ public class Balls extends GLWallpaperService {
 				b = Utils.makeBitmapFromResourceId(R.drawable.denim);
 				break;
 			case 5:
-				b = Utils.makeBitmapFromResourceId(R.drawable.google);
+				b = Utils.makeBitmapFromResourceId(R.drawable.denim_2);
 				break;
 			case 6:
 				b = Utils.makeBitmapFromResourceId(R.drawable.checkerboard);
