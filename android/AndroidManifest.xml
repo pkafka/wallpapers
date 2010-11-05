@@ -21,17 +21,6 @@
             </intent-filter>
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/balls" />
         </service>
-         <service
-            android:label="Prison Break"
-            android:name=".PrisonYard"
-            android:thumbnail="@drawable/icon"
-            android:icon="@drawable/icon"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/prison" />
-        </service>
         <service
             android:label="Fire"
             android:name=".FireWallpaperService"
@@ -43,19 +32,7 @@
             </intent-filter>
             <meta-data android:name="android.service.wallpaper" android:resource="@xml/fire" />
         </service>
-        
-        <service
-            android:label="Picturesque"
-            android:name=".Picturesque"
-            android:thumbnail="@drawable/icon"
-            android:icon="@drawable/icon"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-            <meta-data android:name="android.service.wallpaper" android:resource="@xml/picturesque" />
-        </service>
-        
+
         <service
             android:label="Finger Paint"
             android:name=".FingerPaint"
