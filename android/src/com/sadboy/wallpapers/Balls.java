@@ -120,13 +120,7 @@ public class Balls extends GLWallpaperService {
 				b = Utils.makeBitmapFromResourceId(R.drawable.gray_waves);
 				break;
 			case 4:
-				b = Utils.makeBitmapFromResourceId(R.drawable.denim);
-				break;
-			case 5:
-				b = Utils.makeBitmapFromResourceId(R.drawable.denim_2);
-				break;
-			case 6:
-				b = Utils.makeBitmapFromResourceId(R.drawable.checkerboard);
+				b = Utils.makeBitmapFromResourceId(R.drawable.paper);
 				break;
 			}
     		if (b != null){
