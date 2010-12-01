@@ -3,5 +3,5 @@
 <wallpaper xmlns:android="http://schemas.android.com/apk/res/android"
 android:thumbnail="@drawable/balls" 
     android:description="@string/wallpaper_balls"
-    android:settingsActivity="com.sadboy.wallpapers.BallsSettings"
+    android:settingsActivity="com.sadboy.wallpapers.paid.BallsSettings"
 />
