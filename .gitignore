@@ -6,3 +6,7 @@
 /android/bin
 /min3d/sampleProjects/min3dSampleProject1/bin
 /min3d/sampleProjects/min3dSampleProject1/gen
+gen*
+bin*
+obj*
+*_ReSharper*
