@@ -248,7 +248,6 @@ public class Balls extends GLWallpaperService {
    
     	}
         
-
     	@Override
     	public void onTouchEvent(MotionEvent e) {
             float x = e.getX();
@@ -259,6 +258,13 @@ public class Balls extends GLWallpaperService {
     	        	y = y * .001f;
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
+    	        		
+    	        		if (obj == _up &&
+    	        				obj == _down &&
+    	        				obj == _east &&
+    	        				obj == _west)
+    	        			continue;
+    	        		
     	        		//TODO: make pressure equal to distance from touch
     	        		
     	        		
@@ -271,6 +277,13 @@ public class Balls extends GLWallpaperService {
     	            float dy = y - mPreviousY;
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
+    	        		
+    	        		if (obj == _up &&
+    	        				obj == _down &&
+    	        				obj == _east &&
+    	        				obj == _west)
+    	        			continue;
+    	        		
 	        	        	obj.rotation().x += dx * Object3d.TOUCH_SCALE_FACTOR;
 	        	        	obj.rotation().y += dy * Object3d.TOUCH_SCALE_FACTOR;
     	        	}
