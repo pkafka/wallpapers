@@ -259,9 +259,9 @@ public class Balls extends GLWallpaperService {
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
     	        		
-    	        		if (obj == _up &&
-    	        				obj == _down &&
-    	        				obj == _east &&
+    	        		if (obj == _up ||
+    	        				obj == _down ||
+    	        				obj == _east ||
     	        				obj == _west)
     	        			continue;
     	        		
@@ -278,9 +278,9 @@ public class Balls extends GLWallpaperService {
     	        	for (int i = 0; i < _scene.numChildren(); i++){
     	        		Object3d obj = _scene.getChildAt(i);
     	        		
-    	        		if (obj == _up &&
-    	        				obj == _down &&
-    	        				obj == _east &&
+    	        		if (obj == _up ||
+    	        				obj == _down ||
+    	        				obj == _east ||
     	        				obj == _west)
     	        			continue;
     	        		
